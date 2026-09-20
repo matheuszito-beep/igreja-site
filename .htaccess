@@ -1,0 +1,58 @@
+# ============================================================
+#  Configuração para a Hostinger (Apache / LiteSpeed)
+#  Envie este arquivo junto com o site para a pasta public_html.
+# ============================================================
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+
+AddType text/javascript .js
+AddType image/svg+xml .svg
+AddType image/avif .avif
+AddType image/webp .webp
+AddType text/calendar .ics
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Força HTTPS (ative o SSL grátis no painel da Hostinger antes)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Bloqueia arquivos que só servem para desenvolvimento
+  RewriteRule ^(tests|tools|supabase|node_modules)(/|$) - [F,L]
+  RewriteRule ^(package\.json|README\.md|BACKLOG\.md)$ - [F,L]
+
+  # Permite abrir /eventos sem o .html
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^([^.]+)$ $1.html [L]
+</IfModule>
+
+# Cabeçalhos de segurança (também usados pelo servidor local em tools/serve.mjs)
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(self), payment=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo=' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; frame-src https://www.google.com https://maps.google.com https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' https://htwckbwlhdesdkgdtwle.supabase.co https://nominatim.openstreetmap.org; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+</IfModule>
+
+# Cache: páginas, scripts e agenda sempre conferem se há versão nova;
+# imagens ficam 7 dias no navegador (ao trocar uma imagem, use um nome de arquivo novo).
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|css|json|xml|txt|ics)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(avif|webp|jpe?g|png|gif|svg|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml text/plain application/xml text/calendar
+</IfModule>

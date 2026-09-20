@@ -1,0 +1,425 @@
+/* ============================================================
+   Componentes compartilhados: controle segmentado, filtros em pílula,
+   campos de formulário e interruptores (site, agenda e painel)
+   ============================================================ */
+
+/* ---------- Controle segmentado ---------- */
+.segmented {
+  position: relative;
+  display: inline-grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  padding: 3px;
+  border-radius: 11px;
+  background: var(--color-surface-2);
+}
+
+.segmented::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--count, 2));
+  border-radius: 9px;
+  background: var(--color-bg);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.04);
+  transform: translateX(calc(var(--index, 0) * 100%));
+  transition: transform 450ms var(--ease-out-expo);
+}
+
+.segmented button {
+  position: relative;
+  min-width: 88px;
+  padding: 0.45rem 1rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.segmented button[aria-pressed="true"] {
+  font-weight: 600;
+}
+
+/* ---------- Filtros em pílula ---------- */
+.chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 36px;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.chip:hover {
+  border-color: var(--color-subtle);
+}
+
+.chip:active {
+  transform: scale(0.95);
+}
+
+.chip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cat);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--color-solid);
+  background: var(--color-solid);
+  color: #fff;
+}
+
+/* ---------- Campos de formulário ---------- */
+.field {
+  position: relative;
+}
+
+.field__control {
+  display: block;
+  width: 100%;
+  padding: 1.55rem 1rem 0.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  outline: none;
+  resize: vertical;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+textarea.field__control {
+  min-height: 150px;
+}
+
+.field__control:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.16);
+}
+
+.field__control:disabled {
+  background: var(--color-surface);
+  color: var(--color-subtle);
+}
+
+.field__label {
+  position: absolute;
+  top: 1.05rem;
+  left: 1rem;
+  color: var(--color-subtle);
+  pointer-events: none;
+  transform-origin: left top;
+  transition:
+    transform 250ms var(--ease-out-expo),
+    color var(--duration-fast);
+}
+
+.field__control:focus + .field__label,
+.field__control:not(:placeholder-shown) + .field__label {
+  transform: translateY(-0.6rem) scale(0.76);
+}
+
+.field__control:focus + .field__label {
+  color: var(--color-accent);
+}
+
+.field__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.35rem;
+  padding-inline: 0.25rem;
+  color: var(--color-subtle);
+  font-size: var(--text-xs);
+}
+
+.field__error {
+  color: var(--color-error);
+}
+
+.field--error .field__control {
+  border-color: var(--color-error);
+}
+
+.field--error .field__control:focus {
+  box-shadow: 0 0 0 4px rgba(215, 0, 21, 0.14);
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0.25rem;
+  cursor: pointer;
+}
+
+.switch input {
+  position: relative;
+  flex: none;
+  width: 51px;
+  height: 31px;
+  margin: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  cursor: pointer;
+  appearance: none;
+  transition: background-color 250ms var(--ease-standard);
+}
+
+.switch input::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.16);
+  transition: transform 350ms var(--ease-out-expo);
+}
+
+.switch input:checked {
+  background: var(--color-live);
+}
+
+.switch input:checked::after {
+  transform: translateX(20px);
+}
+
+.field--static .field__label {
+  transform: translateY(-0.6rem) scale(0.76);
+}
+
+.field__hint {
+  margin-top: 0.35rem;
+  padding-inline: 0.25rem;
+  color: var(--color-subtle);
+  font-size: var(--text-xs);
+}
+
+select.field__control {
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 1rem center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.switch small {
+  display: block;
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+/* ---------- Linha de filtros e alerta ---------- */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 calc(-1 * var(--gutter)) 1.5rem;
+  padding: 0.25rem var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.agenda-alert {
+  margin-bottom: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm);
+  background: #fff1f0;
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+/* ============================================================
+   Autenticação, mensagens de formulário e botões de perigo
+   Compartilhado entre /admin e /conta (área do membro)
+   ============================================================ */
+.text-button {
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  color: var(--color-link);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.btn--danger {
+  background: var(--color-error);
+}
+
+.btn--danger:hover {
+  background: #b80012;
+}
+
+.btn--danger-ghost {
+  background: transparent;
+  color: var(--color-error);
+  box-shadow: inset 0 0 0 1px rgba(215, 0, 21, 0.35);
+}
+
+.btn--danger-ghost:hover {
+  background: rgba(215, 0, 21, 0.06);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+.form-message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: #fff1f0;
+  color: var(--color-error);
+  font-size: var(--text-sm);
+}
+
+.form-message[data-tone="success"] {
+  background: #eefbf1;
+  color: #1f7a38;
+}
+
+/* ---------- Carregando ---------- */
+.auth-splash {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  min-height: 100vh;
+  color: var(--color-muted);
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--color-surface-2);
+  border-top-color: var(--color-solid);
+  border-radius: 50%;
+  animation: admin-spin 0.8s linear infinite;
+}
+
+@keyframes admin-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Entrar ---------- */
+.auth {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.5rem;
+  min-height: 100vh;
+  padding: 2rem var(--gutter);
+}
+
+.auth__card {
+  display: grid;
+  gap: 1.25rem;
+  width: min(420px, calc(100vw - 2 * var(--gutter)));
+  padding: clamp(1.75rem, 5vw, 2.5rem);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-lift);
+  text-align: center;
+}
+
+.auth__logo {
+  width: auto;
+  height: 44px;
+  margin: 0 auto;
+  background: none;
+}
+
+.auth__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.auth__lead,
+.auth__meta {
+  margin-top: 0.35rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.auth__form {
+  display: grid;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.auth__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1.25rem;
+}
+
+.auth__back {
+  font-size: var(--text-sm);
+}
+
+/* ---------- Confirmação (compartilhado entre /admin e /conta) ---------- */
+.confirm {
+  width: min(400px, calc(100vw - 32px));
+  padding: 1.5rem;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: var(--shadow-float);
+  text-align: center;
+}
+
+.confirm::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.confirm h2 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.confirm p {
+  margin-top: 0.5rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.confirm__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}

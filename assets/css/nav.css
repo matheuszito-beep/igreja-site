@@ -1,0 +1,472 @@
+/* ============================================================
+   Navegação "Ilha" — cápsula flutuante que se expande em painel
+   ============================================================ */
+.island {
+  --island-h: 48px;
+  --island-w: 260px;
+  --island-radius: 30px;
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.island__scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.16);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 400ms var(--ease-standard);
+  pointer-events: none;
+}
+
+.island[data-state="open"] .island__scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* A casca tem o tamanho do painel aberto; o clip-path revela só a cápsula quando fechada. */
+.island__shell {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: min(820px, calc(100vw - 20px));
+  max-height: calc(100dvh - 24px);
+  transform: translateX(-50%);
+  border-radius: var(--island-radius);
+  background: var(--color-solid);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  color: var(--color-night-ink);
+  pointer-events: auto;
+  clip-path: inset(
+    0px
+    calc((100% - var(--island-w)) / 2)
+    calc(100% - var(--island-h))
+    calc((100% - var(--island-w)) / 2)
+    round calc(var(--island-h) / 2)
+  );
+  transition: clip-path 620ms var(--ease-out-expo);
+}
+
+.island[data-state="open"] .island__shell {
+  clip-path: inset(0px 0px 0px 0px round var(--island-radius));
+}
+
+/* ---------- Cápsula ---------- */
+.island__bar {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  height: var(--island-h);
+  margin-inline: auto;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  user-select: none;
+  transition: box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+.island[data-state="closed"] .island__bar {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.island__brand {
+  display: flex;
+  align-items: center;
+  padding: 0 4px 0 14px;
+  border-radius: var(--radius-pill);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.island__brand:hover {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.island__sep {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.island__status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 20px;
+  overflow: hidden;
+  font-size: 14px;
+  color: rgba(245, 245, 247, 0.7);
+}
+
+.island__label {
+  display: block;
+  white-space: nowrap;
+  transition:
+    transform 260ms var(--ease-out-expo),
+    opacity 200ms var(--ease-standard);
+}
+
+.island__label.is-leaving {
+  transform: translateY(-110%);
+  opacity: 0;
+}
+
+.island__label.is-entering {
+  transform: translateY(110%);
+  opacity: 0;
+  transition: none;
+}
+
+.island__live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-live);
+  box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.6);
+  animation: island-pulse 1.8s var(--ease-standard) infinite;
+}
+
+@keyframes island-pulse {
+  70% { box-shadow: 0 0 0 7px rgba(48, 209, 88, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0); }
+}
+
+.island__toggle {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-left: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.island__bar:hover .island__toggle,
+.island__toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.island__burger {
+  position: relative;
+  width: 14px;
+  height: 8px;
+}
+
+.island__burger span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.6px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 500ms var(--ease-out-expo);
+}
+
+.island__burger span:first-child { top: 0; }
+.island__burger span:last-child { bottom: 0; }
+
+.island[data-state="open"] .island__burger span:first-child {
+  transform: translateY(3.2px) rotate(45deg);
+}
+
+.island[data-state="open"] .island__burger span:last-child {
+  transform: translateY(-3.2px) rotate(-45deg);
+}
+
+.island__progress {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gradient-mark);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: opacity var(--duration-normal) var(--ease-standard);
+}
+
+.island[data-state="open"] .island__progress {
+  opacity: 0;
+}
+
+/* ---------- Painel ---------- */
+.island__panel {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 8px;
+  min-height: 0;
+  padding: 6px 12px 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-14px) scale(0.98);
+  transform-origin: top center;
+  transition:
+    opacity 180ms var(--ease-standard),
+    transform 500ms var(--ease-out-expo),
+    visibility 0s linear 620ms;
+}
+
+.island[data-state="open"] .island__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 90ms, 60ms, 0s;
+}
+
+.island__links {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.island__links li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 300ms var(--ease-standard),
+    transform 600ms var(--ease-out-expo);
+}
+
+.island[data-state="open"] .island__links li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(80ms + var(--i, 0) * 35ms);
+}
+
+.island__links a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--color-night-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1rem + 0.9vw, 1.625rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    transform 400ms var(--ease-out-expo);
+}
+
+.island__links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.island__index {
+  min-width: 1.6em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  color: rgba(245, 245, 247, 0.38);
+}
+
+.island__links a[aria-current] .island__index {
+  color: var(--color-link-night);
+}
+
+.island__links a[aria-current]::after {
+  content: "";
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: var(--color-link-night);
+}
+
+.island__aside {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 6px;
+}
+
+.island__account {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--color-night-ink);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.island__account:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.island__account-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.island__account-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.island__account-name {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.island__card {
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.island__card .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(245, 245, 247, 0.6);
+  font-size: 12px;
+}
+
+.island__card.is-live .eyebrow {
+  color: var(--color-live);
+}
+
+.island__next-name {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.island__next-when {
+  color: rgba(245, 245, 247, 0.6);
+  font-size: var(--text-sm);
+}
+
+.island__countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+  text-align: center;
+}
+
+.island__countdown div {
+  padding: 8px 0 6px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.island__countdown b {
+  display: block;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.island__countdown small {
+  color: rgba(245, 245, 247, 0.5);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.island__card.is-live .island__countdown {
+  display: none;
+}
+
+.island__actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.island__action {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px 6px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-night-ink);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    transform 400ms var(--ease-out-expo);
+}
+
+.island__action:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.island__action svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (max-width: 680px) {
+  .island {
+    --island-radius: 26px;
+  }
+
+  .island__panel {
+    grid-template-columns: 1fr;
+    padding-inline: 8px;
+  }
+
+  .island__links {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .island__links a {
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .island__sep {
+    display: none;
+  }
+}

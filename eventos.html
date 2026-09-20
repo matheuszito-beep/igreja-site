@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agenda — 1ª Igreja Batista Maanaim</title>
+  <meta name="description" content="Calendário de cultos, conferências, encontros e eventos especiais da 1ª Igreja Batista Maanaim, em Cabreúva.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Agenda — 1ª Igreja Batista Maanaim">
+  <meta property="og:description" content="Cultos, encontros e eventos especiais.">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://htwckbwlhdesdkgdtwle.supabase.co" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/calendar.css">
+  <link rel="stylesheet" href="assets/css/agenda-list.css">
+
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/calendar-utils.js" defer></script>
+  <script src="assets/js/agenda-model.js" defer></script>
+  <script src="assets/js/supabase-rest.js" defer></script>
+  <script src="assets/js/cached-resource.js" defer></script>
+  <script src="assets/js/agenda-data.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/agenda-carousel.js" defer></script>
+  <script src="assets/js/calendar.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ================= Navegação "ilha" ================= -->
+  <header class="island" data-island data-state="closed">
+    <div class="island__scrim" data-island-close></div>
+    <nav class="island__shell" aria-label="Menu principal">
+      <div class="island__bar">
+        <a class="island__brand" href="index.html">
+          <span data-config="nome">Batista Maanaim</span>
+        </a>
+        <span class="island__sep" aria-hidden="true"></span>
+        <span class="island__status">
+          <span class="island__live" data-live-indicator hidden></span>
+          <span class="island__label" data-island-label>Agenda</span>
+        </span>
+        <button class="island__toggle" type="button" aria-expanded="false" aria-controls="menu-painel" data-island-toggle>
+          <span class="sr-only">Abrir menu</span>
+          <span class="island__burger" aria-hidden="true"><span></span><span></span></span>
+        </button>
+        <span class="island__progress" aria-hidden="true" data-island-progress></span>
+      </div>
+
+      <div class="island__panel" id="menu-painel">
+        <ol class="island__links">
+          <li><a href="index.html#inicio"><span class="island__index">01</span>Início</a></li>
+          <li><a href="index.html#cultos"><span class="island__index">02</span>Cultos</a></li>
+          <li><a href="index.html#sobre"><span class="island__index">03</span>Sobre nós</a></li>
+          <li><a href="index.html#ministerios"><span class="island__index">04</span>Ministérios</a></li>
+          <li><a href="celulas.html"><span class="island__index">05</span>Células</a></li>
+          <li><a href="eventos.html" data-nav="agenda" aria-current="page"><span class="island__index">06</span>Agenda</a></li>
+          <li><a href="index.html#mensagens"><span class="island__index">07</span>Mensagens</a></li>
+          <li><a href="index.html#contribua"><span class="island__index">08</span>Contribua</a></li>
+          <li><a href="index.html#oracao"><span class="island__index">09</span>Oração</a></li>
+          <li><a href="index.html#visite"><span class="island__index">10</span>Visite-nos</a></li>
+        </ol>
+        <div class="island__aside">
+          <a class="island__account" href="conta.html" data-account-widget>
+            <span class="island__account-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
+            </span>
+            <span>
+              <span class="eyebrow" data-account-eyebrow>Área do membro</span>
+              <span class="island__account-name" data-account-name>Entrar</span>
+              <span class="island__next-when" data-account-sub>Sua célula, seus dados e mais</span>
+            </span>
+          </a>
+          <div class="island__card is-loading" data-next-service>
+            <p class="eyebrow"><span data-ns-status>Próximo culto</span></p>
+            <p class="island__next-name" data-ns-name>Culto de Celebração</p>
+            <p class="island__next-when" data-ns-when>Domingo, 19h</p>
+            <div class="island__countdown" aria-hidden="true">
+              <div><b data-cd="days">00</b><small>dias</small></div>
+              <div><b data-cd="hours">00</b><small>horas</small></div>
+              <div><b data-cd="minutes">00</b><small>min</small></div>
+              <div><b data-cd="seconds">00</b><small>seg</small></div>
+            </div>
+          </div>
+          <div class="island__actions">
+            <a class="island__action" href="index.html#cultos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+              Horários
+            </a>
+            <a class="island__action" href="index.html#visite" data-whatsapp>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5l1.6-4.4A8.4 8.4 0 1 1 20.5 11.6z"/></svg>
+              WhatsApp
+            </a>
+            <a class="island__action" href="index.html#visite" data-maps>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+              Como chegar
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="conteudo">
+    <section class="agenda-hero" id="agenda" data-nav-label="Agenda" aria-labelledby="agenda-title">
+      <div class="container">
+        <p class="eyebrow gradient-text">Agenda</p>
+        <h1 class="headline" id="agenda-title">O que vem por aí. <span class="headline__muted">Cultos, encontros e eventos especiais.</span></h1>
+      </div>
+    </section>
+
+    <section class="agenda" aria-label="Calendário de eventos">
+      <div class="container">
+        <div class="agenda-toolbar">
+          <div class="month-nav">
+            <button class="round-btn" type="button" data-cal-prev aria-label="Mês anterior">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <h2 class="month-nav__title" aria-live="polite"><span data-cal-month>Setembro</span> <span class="month-nav__year" data-cal-year>2026</span></h2>
+            <button class="round-btn" type="button" data-cal-next aria-label="Próximo mês">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <button class="btn-today" type="button" data-cal-today>Hoje</button>
+          </div>
+          <div class="segmented" role="group" aria-label="Modo de visualização" data-segmented>
+            <button type="button" data-view="mes" aria-pressed="true">Mês</button>
+            <button type="button" data-view="lista" aria-pressed="false">Lista</button>
+          </div>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filtrar por categoria" data-cal-filters></div>
+        <p class="agenda-alert" role="alert" data-cal-error hidden></p>
+
+        <div class="agenda-layout" data-view-panel="mes">
+          <div class="cal">
+            <div class="cal__weekdays" aria-hidden="true">
+              <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+            </div>
+            <div class="cal__grid" data-cal-grid>
+              <noscript><p>Ative o JavaScript para ver o calendário.</p></noscript>
+            </div>
+          </div>
+          <aside class="day-panel" aria-live="polite" aria-labelledby="day-title">
+            <p class="day-panel__weekday" data-day-weekday></p>
+            <h2 class="day-panel__title" id="day-title" data-day-title></h2>
+            <ul class="day-panel__list" data-day-list></ul>
+          </aside>
+        </div>
+
+        <section class="agenda-list" data-view-panel="lista" data-cal-list aria-labelledby="list-range" hidden>
+          <div class="agenda-list__head">
+            <div>
+              <p class="agenda-list__total" data-list-total>0 eventos</p>
+              <h2 class="agenda-list__range" id="list-range" data-list-range aria-live="polite">Próximos eventos</h2>
+            </div>
+            <div class="pager">
+              <button class="round-btn" type="button" data-list-prev aria-label="Página anterior">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+              </button>
+              <span class="pager__count" data-list-count aria-hidden="true">1 / 1</span>
+              <button class="round-btn" type="button" data-list-next aria-label="Próxima página">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="agenda-list__progress" aria-hidden="true"><span data-list-progress></span></div>
+          <div class="list-track" data-list-track tabindex="0" role="region" aria-roledescription="carrossel" aria-label="Eventos em páginas. Use as setas do teclado para trocar de página."></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="section section--alt agenda-cta" aria-labelledby="cta-title">
+      <div class="container">
+        <h2 class="headline" id="cta-title" data-reveal>Não perca nenhum encontro.</h2>
+        <p class="lead" data-reveal data-reveal-delay="80">Receba avisos de eventos e mudanças de horário direto no seu WhatsApp.</p>
+        <div class="agenda-cta__actions" data-reveal data-reveal-delay="160">
+          <a class="btn" href="index.html#visite" data-whatsapp="Olá! Quero receber os avisos da agenda da igreja no WhatsApp.">Quero receber avisos</a>
+          <a class="link-chevron" data-social="instagram">Siga no Instagram</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= Detalhes do evento ================= -->
+  <dialog class="event-modal" data-event-modal aria-labelledby="modal-title">
+    <div class="event-modal__media">
+      <img data-modal-img src="data:," alt="" width="1100" height="620">
+    </div>
+    <button class="event-modal__close" type="button" data-modal-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="event-modal__body">
+      <span class="pill" data-modal-cat></span>
+      <h2 class="event-modal__title" id="modal-title" data-modal-title></h2>
+      <ul class="event-modal__meta">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+          <span data-modal-date></span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+          <span data-modal-time></span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <span data-modal-local></span>
+        </li>
+      </ul>
+      <p class="event-modal__desc" data-modal-desc></p>
+      <div class="event-modal__actions" data-modal-actions>
+        <a class="btn" data-modal-google target="_blank" rel="noopener">Google Agenda</a>
+        <button class="btn btn--secondary" type="button" data-modal-ics>Apple / Outlook</button>
+        <button class="btn btn--dark btn--block" type="button" data-modal-share>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3.5M7.5 8L12 3.5 16.5 8"/><path d="M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5"/></svg>
+          Compartilhar evento
+        </button>
+      </div>
+
+      <div class="event-modal__signup" data-modal-signup hidden>
+        <p class="event-modal__vagas" data-modal-vagas></p>
+
+        <div class="signup-login" data-signup-login hidden>
+          <p>Entre na sua conta para se inscrever neste evento.</p>
+          <a class="btn btn--dark btn--block" href="conta.html">Entrar / Criar conta</a>
+        </div>
+
+        <div class="signup-existing" data-signup-existing hidden>
+          <p data-signup-existing-text></p>
+          <button class="btn btn--danger-ghost btn--block" type="button" data-signup-cancel>Cancelar inscrição</button>
+        </div>
+
+        <button class="btn btn--dark btn--block" type="button" data-signup-open>Inscreva-se</button>
+        <form class="signup-form" data-signup-form hidden novalidate>
+          <div class="field">
+            <input class="field__control" id="insc-nome" name="nome" type="text" maxlength="80" placeholder=" ">
+            <label class="field__label" for="insc-nome">Seu nome</label>
+            <p class="field__hint field__error" data-signup-error-for="nome" hidden></p>
+          </div>
+          <div class="field">
+            <input class="field__control" id="insc-whatsapp" name="whatsapp" type="tel" inputmode="tel" maxlength="20" placeholder=" ">
+            <label class="field__label" for="insc-whatsapp">WhatsApp</label>
+            <p class="field__hint field__error" data-signup-error-for="whatsapp" hidden></p>
+          </div>
+          <div class="field field--static">
+            <input class="field__control" id="insc-qtd" name="quantidade" type="number" min="1" max="20" value="1">
+            <label class="field__label" for="insc-qtd">Quantas pessoas (com você)</label>
+            <p class="field__hint field__error" data-signup-error-for="quantidade" hidden></p>
+          </div>
+          <button class="btn btn--block" type="submit" data-signup-submit>Confirmar inscrição</button>
+        </form>
+        <p class="form-message" data-signup-message role="alert" hidden></p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ================= Rodapé ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="site-footer__note">Os horários podem mudar em datas especiais. Esta agenda é sempre a versão mais atualizada.</p>
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <img class="site-footer__logo" src="assets/img/logo-maanaim.svg" width="116" height="44" alt="Batista Maanaim">
+          <p><span data-config="nomeCompleto">1ª Igreja Batista Maanaim</span> — uma igreja para toda a família em Cabreúva.</p>
+        </div>
+        <nav aria-label="A igreja">
+          <h3>A igreja</h3>
+          <ul>
+            <li><a href="index.html#sobre">Sobre nós</a></li>
+            <li><a href="index.html#ministerios">Ministérios</a></li>
+            <li><a href="index.html#mensagens">Mensagens</a></li>
+            <li><a href="index.html#visite">Visite-nos</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Participe">
+          <h3>Participe</h3>
+          <ul>
+            <li><a href="index.html#cultos">Cultos</a></li>
+            <li><a href="celulas.html">Células</a></li>
+            <li><a href="eventos.html">Agenda</a></li>
+            <li><a href="index.html#oracao">Pedido de oração</a></li>
+            <li><a href="index.html#contribua">Contribua</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Contato">
+          <h3>Contato</h3>
+          <ul>
+            <li><a href="index.html#visite" data-whatsapp>WhatsApp <span data-config="contato.whatsappExibicao">(11) 99999-9999</span></a></li>
+            <li><a href="index.html#visite" data-email data-config="contato.email">contato@batistamaanaim.com.br</a></li>
+            <li><a data-social="instagram">Instagram</a></li>
+            <li><a data-social="youtube">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="site-footer__bottom">
+        <p>© <span data-year>2026</span> <span data-config="nomeCompleto">1ª Igreja Batista Maanaim</span>. Todos os direitos reservados.</p>
+        <p><span data-config="endereco.linha1">Rua Exemplo, 000</span> · <span data-config="endereco.linha2">Novo Bonfim — Cabreúva, SP</span></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

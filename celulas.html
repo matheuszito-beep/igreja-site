@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Células — 1ª Igreja Batista Maanaim</title>
+  <meta name="description" content="Encontre uma célula da 1ª Igreja Batista Maanaim perto de você em Cabreúva: grupos nos lares para orar, estudar a Bíblia e fazer amigos.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Células — 1ª Igreja Batista Maanaim">
+  <meta property="og:description" content="Grupos nos lares perto de você.">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://htwckbwlhdesdkgdtwle.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/map.css">
+  <link rel="stylesheet" href="assets/css/celulas.css">
+
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/calendar-utils.js" defer></script>
+  <script src="assets/js/agenda-model.js" defer></script>
+  <script src="assets/js/celulas-model.js" defer></script>
+  <script src="assets/js/supabase-rest.js" defer></script>
+  <script src="assets/js/cached-resource.js" defer></script>
+  <script src="assets/js/agenda-data.js" defer></script>
+  <script src="assets/js/map-kit.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/celulas.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ================= Navegação "ilha" ================= -->
+  <header class="island" data-island data-state="closed">
+    <div class="island__scrim" data-island-close></div>
+    <nav class="island__shell" aria-label="Menu principal">
+      <div class="island__bar">
+        <a class="island__brand" href="index.html">
+          <span data-config="nome">Batista Maanaim</span>
+        </a>
+        <span class="island__sep" aria-hidden="true"></span>
+        <span class="island__status">
+          <span class="island__live" data-live-indicator hidden></span>
+          <span class="island__label" data-island-label>Células</span>
+        </span>
+        <button class="island__toggle" type="button" aria-expanded="false" aria-controls="menu-painel" data-island-toggle>
+          <span class="sr-only">Abrir menu</span>
+          <span class="island__burger" aria-hidden="true"><span></span><span></span></span>
+        </button>
+        <span class="island__progress" aria-hidden="true" data-island-progress></span>
+      </div>
+
+      <div class="island__panel" id="menu-painel">
+        <ol class="island__links">
+          <li><a href="index.html#inicio"><span class="island__index">01</span>Início</a></li>
+          <li><a href="index.html#cultos"><span class="island__index">02</span>Cultos</a></li>
+          <li><a href="index.html#sobre"><span class="island__index">03</span>Sobre nós</a></li>
+          <li><a href="index.html#ministerios"><span class="island__index">04</span>Ministérios</a></li>
+          <li><a href="celulas.html" data-nav="celulas" aria-current="page"><span class="island__index">05</span>Células</a></li>
+          <li><a href="eventos.html"><span class="island__index">06</span>Agenda</a></li>
+          <li><a href="index.html#mensagens"><span class="island__index">07</span>Mensagens</a></li>
+          <li><a href="index.html#contribua"><span class="island__index">08</span>Contribua</a></li>
+          <li><a href="index.html#oracao"><span class="island__index">09</span>Oração</a></li>
+          <li><a href="index.html#visite"><span class="island__index">10</span>Visite-nos</a></li>
+        </ol>
+        <div class="island__aside">
+          <a class="island__account" href="conta.html" data-account-widget>
+            <span class="island__account-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
+            </span>
+            <span>
+              <span class="eyebrow" data-account-eyebrow>Área do membro</span>
+              <span class="island__account-name" data-account-name>Entrar</span>
+              <span class="island__next-when" data-account-sub>Sua célula, seus dados e mais</span>
+            </span>
+          </a>
+          <div class="island__card is-loading" data-next-service>
+            <p class="eyebrow"><span data-ns-status>Próximo culto</span></p>
+            <p class="island__next-name" data-ns-name>Culto de Celebração</p>
+            <p class="island__next-when" data-ns-when>Domingo, 19h</p>
+            <div class="island__countdown" aria-hidden="true">
+              <div><b data-cd="days">00</b><small>dias</small></div>
+              <div><b data-cd="hours">00</b><small>horas</small></div>
+              <div><b data-cd="minutes">00</b><small>min</small></div>
+              <div><b data-cd="seconds">00</b><small>seg</small></div>
+            </div>
+          </div>
+          <div class="island__actions">
+            <a class="island__action" href="index.html#cultos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+              Horários
+            </a>
+            <a class="island__action" href="index.html#visite" data-whatsapp>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5l1.6-4.4A8.4 8.4 0 1 1 20.5 11.6z"/></svg>
+              WhatsApp
+            </a>
+            <a class="island__action" href="index.html#visite" data-maps>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+              Como chegar
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="conteudo">
+    <section class="cells-hero" id="celulas" data-nav-label="Células" aria-labelledby="celulas-title">
+      <div class="container">
+        <p class="eyebrow gradient-text">Células</p>
+        <h1 class="headline" id="celulas-title">Uma casa perto de você. <span class="headline__muted">Toda semana, gente reunida para orar, estudar a Bíblia e fazer amigos.</span></h1>
+      </div>
+    </section>
+
+    <section class="cells" aria-label="Mapa e lista das células">
+      <div class="container">
+        <div class="cells-mine" data-mine-banner hidden></div>
+        <div class="cells-toolbar">
+          <div class="filters" role="group" aria-label="Filtrar por dia da semana" data-cells-days></div>
+          <button class="btn btn--secondary cells-near" type="button" aria-pressed="false" data-near-me>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4L3 11l7 2 2 7z"/></svg>
+            Perto de mim
+          </button>
+        </div>
+        <div class="filters" role="group" aria-label="Filtrar por perfil" data-cells-profiles hidden></div>
+        <p class="agenda-alert" role="alert" data-cells-error hidden></p>
+
+        <div class="cells-layout">
+          <div class="map-surface cells-map" data-cells-map role="region" aria-label="Mapa das células">
+            <p class="map-surface__status" data-map-status>Carregando mapa…</p>
+          </div>
+          <div class="cells-panel">
+            <p class="cells-count" data-cells-count aria-live="polite">Carregando células…</p>
+            <ul class="cells-list" data-cells-list></ul>
+            <p class="cells-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>
+              Para proteger as famílias que abrem suas casas, o mapa mostra um ponto aproximado. O endereço completo é enviado quando você fala com a gente.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt cells-cta" aria-labelledby="cells-cta-title">
+      <div class="container">
+        <h2 class="headline" id="cells-cta-title">Sua casa pode ser uma célula.</h2>
+        <p class="lead">Quer receber um grupo ou ser treinado para liderar? Fale com a gente.</p>
+        <div class="cells-cta__actions">
+          <a class="btn" href="index.html#visite" data-whatsapp="Olá! Tenho interesse em abrir minha casa para uma célula.">Quero abrir minha casa</a>
+          <a class="link-chevron" href="eventos.html">Ver treinamentos na agenda</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- ================= Rodapé ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="site-footer__note">Quer receber uma célula na sua casa? <a href="index.html#visite" data-whatsapp="Olá! Tenho interesse em abrir minha casa para uma célula.">Fale com a gente pelo WhatsApp</a>.</p>
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <img class="site-footer__logo" src="assets/img/logo-maanaim.svg" width="116" height="44" alt="Batista Maanaim">
+          <p><span data-config="nomeCompleto">1ª Igreja Batista Maanaim</span> — uma igreja para toda a família em Cabreúva.</p>
+        </div>
+        <nav aria-label="A igreja">
+          <h3>A igreja</h3>
+          <ul>
+            <li><a href="index.html#sobre">Sobre nós</a></li>
+            <li><a href="index.html#ministerios">Ministérios</a></li>
+            <li><a href="index.html#mensagens">Mensagens</a></li>
+            <li><a href="index.html#visite">Visite-nos</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Participe">
+          <h3>Participe</h3>
+          <ul>
+            <li><a href="index.html#cultos">Cultos</a></li>
+            <li><a href="celulas.html">Células</a></li>
+            <li><a href="eventos.html">Agenda</a></li>
+            <li><a href="index.html#oracao">Pedido de oração</a></li>
+            <li><a href="index.html#contribua">Contribua</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Contato">
+          <h3>Contato</h3>
+          <ul>
+            <li><a href="index.html#visite" data-whatsapp>WhatsApp <span data-config="contato.whatsappExibicao">(11) 99999-9999</span></a></li>
+            <li><a href="index.html#visite" data-email data-config="contato.email">contato@batistamaanaim.com.br</a></li>
+            <li><a data-social="instagram">Instagram</a></li>
+            <li><a data-social="youtube">YouTube</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="site-footer__bottom">
+        <p>© <span data-year>2026</span> <span data-config="nomeCompleto">1ª Igreja Batista Maanaim</span>. Todos os direitos reservados.</p>
+        <p><span data-config="endereco.linha1">Rua Exemplo, 000</span> · <span data-config="endereco.linha2">Novo Bonfim — Cabreúva, SP</span></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

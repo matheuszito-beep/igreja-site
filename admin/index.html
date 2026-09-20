@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel da agenda — Batista Maanaim</title>
+
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://htwckbwlhdesdkgdtwle.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/map.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+
+  <script>document.documentElement.classList.add('js')</script>
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/calendar-utils.js" defer></script>
+  <script src="../assets/js/agenda-model.js" defer></script>
+  <script src="../assets/js/celulas-model.js" defer></script>
+  <script src="../assets/js/devocionais-model.js" defer></script>
+  <script src="../assets/js/versiculos-banco.js" defer></script>
+  <script src="../assets/js/escalas-model.js" defer></script>
+  <script src="../assets/js/supabase-rest.js" defer></script>
+  <script src="../assets/js/map-kit.js" defer></script>
+  <script src="../assets/js/site.js" defer></script>
+  <script src="../assets/js/admin/admin-ui.js" defer></script>
+  <script src="../assets/js/auth-flow.js" defer></script>
+  <script src="../assets/js/admin/admin-events.js" defer></script>
+  <script src="../assets/js/admin/admin-cells.js" defer></script>
+  <script src="../assets/js/admin/admin-devotionals.js" defer></script>
+  <script src="../assets/js/admin/admin-escalas.js" defer></script>
+  <script src="../assets/js/admin/admin-mural.js" defer></script>
+  <script src="../assets/js/admin/admin-team.js" defer></script>
+  <script src="../assets/js/admin/admin.js" defer></script>
+</head>
+<body class="admin">
+  <!-- ================= Carregando ================= -->
+  <div class="auth-splash" data-view="carregando" role="status">
+    <span class="spinner" aria-hidden="true"></span>
+    <p>Carregando painel…</p>
+  </div>
+
+  <!-- ================= Entrar / criar acesso / recuperar senha ================= -->
+  <main class="auth" data-view="entrar" hidden>
+    <section class="auth__card" aria-labelledby="auth-title">
+      <img class="auth__logo" src="../assets/img/logo-maanaim.svg" width="116" height="44" alt="Batista Maanaim">
+      <div>
+        <h1 class="auth__title" id="auth-title" data-auth-title>Painel da agenda</h1>
+        <p class="auth__lead" data-auth-lead>Entre com seu e-mail e senha para gerenciar os eventos.</p>
+      </div>
+      <form class="auth__form" data-auth-form novalidate>
+        <div class="field" data-field="nome" hidden>
+          <input class="field__control" id="auth-nome" name="nome" type="text" autocomplete="name" maxlength="80" placeholder=" ">
+          <label class="field__label" for="auth-nome">Seu nome</label>
+        </div>
+        <div class="field" data-field="email">
+          <input class="field__control" id="auth-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder=" ">
+          <label class="field__label" for="auth-email">E-mail</label>
+        </div>
+        <div class="field" data-field="senha">
+          <input class="field__control" id="auth-senha" name="senha" type="password" autocomplete="current-password" placeholder=" ">
+          <label class="field__label" for="auth-senha">Senha</label>
+        </div>
+        <p class="form-message" data-auth-message role="alert" hidden></p>
+        <button class="btn btn--block" type="submit" data-auth-submit>Entrar</button>
+      </form>
+      <div class="auth__links">
+        <button class="text-button" type="button" data-auth-mode="entrar">Já tenho acesso</button>
+        <button class="text-button" type="button" data-auth-mode="cadastro">Ainda não tenho acesso</button>
+        <button class="text-button" type="button" data-auth-mode="recuperar">Esqueci minha senha</button>
+      </div>
+    </section>
+    <a class="link-chevron auth__back" href="../index.html">Voltar ao site</a>
+  </main>
+
+  <!-- ================= Conta sem permissão ainda ================= -->
+  <main class="auth" data-view="aguardando" hidden>
+    <section class="auth__card" aria-labelledby="pending-title">
+      <img class="auth__logo" src="../assets/img/logo-maanaim.svg" width="116" height="44" alt="Batista Maanaim">
+      <div>
+        <h1 class="auth__title" id="pending-title">Acesso aguardando liberação</h1>
+        <p class="auth__lead">Sua conta foi criada. Peça para um administrador da igreja liberar o seu acesso ao painel.</p>
+      </div>
+      <p class="auth__meta" data-pending-email></p>
+      <button class="btn btn--secondary btn--block" type="button" data-sign-out>Sair</button>
+    </section>
+  </main>
+
+  <!-- ================= Painel ================= -->
+  <div class="admin-app" data-view="painel" hidden>
+    <header class="admin-bar">
+      <div class="container admin-bar__inner">
+        <a class="admin-bar__brand" href="../index.html">
+          <strong>Batista Maanaim</strong>
+          <span>Painel da agenda</span>
+        </a>
+        <nav class="segmented admin-tabs" aria-label="Seções do painel" data-tabs hidden>
+          <button type="button" data-tab="eventos" data-roles="lider editor admin" aria-pressed="true">Eventos</button>
+          <button type="button" data-tab="celulas" data-roles="editor admin" aria-pressed="false">Células</button>
+          <button type="button" data-tab="devocionais" data-roles="editor admin" aria-pressed="false">Devocional</button>
+          <button type="button" data-tab="escalas" data-roles="lider editor admin" aria-pressed="false">Escalas</button>
+          <button type="button" data-tab="mural" data-roles="editor admin" aria-pressed="false">Mural</button>
+          <button type="button" data-tab="equipe" data-roles="admin" aria-pressed="false">Equipe</button>
+        </nav>
+        <div class="admin-bar__user">
+          <span class="admin-bar__name" data-user-name></span>
+          <span class="role-pill" data-user-role></span>
+          <button class="text-button" type="button" data-sign-out>Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container admin-main" id="painel">
+      <section data-panel="eventos" aria-labelledby="eventos-titulo">
+        <div class="admin-head">
+          <div>
+            <h1 class="title" id="eventos-titulo">Eventos</h1>
+            <p class="admin-head__lead" data-events-summary></p>
+          </div>
+          <button class="btn" type="button" data-new-event>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Novo evento
+          </button>
+        </div>
+        <div class="admin-toolbar">
+          <input class="search" type="search" placeholder="Buscar por nome ou local" aria-label="Buscar eventos" data-events-search>
+          <div class="chips" role="group" aria-label="Filtrar eventos" data-events-filter>
+            <button class="chip" type="button" data-filter="proximos" aria-pressed="true">Próximos</button>
+            <button class="chip" type="button" data-filter="rascunhos" aria-pressed="false">Rascunhos</button>
+            <button class="chip" type="button" data-filter="fixos" aria-pressed="false">Cultos fixos</button>
+            <button class="chip" type="button" data-filter="passados" aria-pressed="false">Passados</button>
+          </div>
+        </div>
+        <p class="form-message" role="alert" data-events-error hidden></p>
+        <ul class="event-list" data-events-list aria-live="polite"></ul>
+      </section>
+
+      <section data-panel="celulas" aria-labelledby="celulas-titulo" hidden>
+        <div class="admin-head">
+          <div>
+            <h1 class="title" id="celulas-titulo">Células</h1>
+            <p class="admin-head__lead" data-cells-summary></p>
+          </div>
+          <button class="btn" type="button" data-new-cell>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Nova célula
+          </button>
+        </div>
+        <div class="admin-toolbar">
+          <input class="search" type="search" placeholder="Buscar por nome, bairro ou líder" aria-label="Buscar células" data-cells-search>
+          <a class="link-chevron" href="../celulas.html" target="_blank" rel="noopener">Ver página no site</a>
+        </div>
+        <p class="form-message" role="alert" data-cells-error hidden></p>
+        <ul class="event-list" data-cells-list aria-live="polite"></ul>
+      </section>
+
+      <section data-panel="devocionais" aria-labelledby="devocionais-titulo" hidden>
+        <div class="admin-head">
+          <div>
+            <h1 class="title" id="devocionais-titulo">Devocional</h1>
+            <p class="admin-head__lead" data-devotionals-summary></p>
+          </div>
+          <button class="btn" type="button" data-new-devotional>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Novo devocional
+          </button>
+        </div>
+        <p class="form-message" role="alert" data-devotionals-error hidden></p>
+        <ul class="event-list" data-devotionals-list aria-live="polite"></ul>
+      </section>
+
+      <section data-panel="escalas" aria-labelledby="escalas-titulo" hidden>
+        <div class="admin-head">
+          <div>
+            <h1 class="title" id="escalas-titulo">Escalas</h1>
+            <p class="admin-head__lead" data-escalas-summary></p>
+          </div>
+          <button class="btn btn--secondary" type="button" data-new-ministry hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Novo ministério
+          </button>
+        </div>
+
+        <div class="field field--static escalas-ministry-picker">
+          <select class="field__control" id="escalas-ministerio" data-escalas-ministerio>
+            <option value="">Carregando ministérios…</option>
+          </select>
+          <label class="field__label" for="escalas-ministerio">Ministério</label>
+        </div>
+
+        <form class="inline-add" data-ministry-form hidden novalidate>
+          <input class="field__control field__control--compact" type="text" name="nome" placeholder="Nome do ministério" maxlength="60" required>
+          <button class="btn btn--secondary" type="submit">Salvar</button>
+          <button class="text-button" type="button" data-ministry-cancel>Cancelar</button>
+        </form>
+        <p class="field__hint field__error" data-ministry-error hidden></p>
+
+        <p class="form-message" role="alert" data-escalas-error hidden></p>
+
+        <div data-escalas-content hidden>
+          <div class="escalas-grid">
+            <div class="escalas-col">
+              <h2 class="escalas-col__title">Equipe</h2>
+              <form class="inline-add" data-member-form novalidate>
+                <input class="field__control field__control--compact" type="text" name="nome" placeholder="Nome" maxlength="80" required>
+                <input class="field__control field__control--compact" type="email" name="email" placeholder="E-mail (opcional)">
+                <button class="btn btn--secondary" type="submit">Adicionar</button>
+              </form>
+              <p class="field__hint">Sem e-mail, ou se a pessoa ainda não tem conta no site, ela entra só com o nome — o líder responde por ela pelo painel.</p>
+              <p class="field__hint field__error" data-member-error hidden></p>
+              <ul class="member-list" data-member-list aria-live="polite"></ul>
+            </div>
+
+            <div class="escalas-col">
+              <h2 class="escalas-col__title">Escalar a equipe</h2>
+              <div class="field field--static">
+                <select class="field__control" data-escala-quando>
+                  <option value="">Escolha o culto ou uma data</option>
+                </select>
+                <label class="field__label">Quando</label>
+              </div>
+              <div class="field field--static" data-escala-data-manual hidden>
+                <input class="field__control" type="date" data-escala-data-input>
+                <label class="field__label">Data</label>
+              </div>
+              <ul class="escala-checklist" data-escala-checklist></ul>
+              <p class="field__hint field__error" data-escala-error hidden></p>
+              <button class="btn btn--secondary" type="button" data-escala-submit>Escalar quem eu marquei</button>
+            </div>
+          </div>
+
+          <div class="cal-mini">
+            <div class="cal-mini__head">
+              <button class="text-button" type="button" data-cal-mini-prev>‹ Mês anterior</button>
+              <h3 class="cal-mini__title" data-cal-mini-title>Mês</h3>
+              <button class="text-button" type="button" data-cal-mini-next>Próximo mês ›</button>
+            </div>
+            <div class="cal-mini__weekdays" aria-hidden="true">
+              <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+            </div>
+            <div class="cal-mini__grid" data-cal-mini-grid></div>
+            <p class="field__hint">Toque num dia para escalar alguém para ele.</p>
+          </div>
+
+          <h3 class="escalas-col__subtitle">Já escalados</h3>
+          <ul class="escala-list" data-escala-list aria-live="polite"></ul>
+        </div>
+      </section>
+
+      <section data-panel="mural" aria-labelledby="mural-titulo" hidden>
+        <div class="admin-head">
+          <div>
+            <h1 class="title" id="mural-titulo">Mural de oração</h1>
+            <p class="admin-head__lead" data-mural-admin-summary></p>
+          </div>
+          <a class="link-chevron" href="../index.html#oracao" target="_blank" rel="noopener">Ver seção no site</a>
+        </div>
+        <p class="field__hint">Pedidos anônimos, a não ser que a pessoa tenha autorizado mostrar o nome. Remova qualquer coisa fora do lugar.</p>
+        <p class="form-message" role="alert" data-mural-admin-error hidden></p>
+        <ul class="member-list" data-mural-admin-list aria-live="polite"></ul>
+      </section>
+
+      <section data-panel="equipe" aria-labelledby="equipe-titulo" hidden>
+        <div class="admin-head">
+          <div>
+            <h1 class="title" id="equipe-titulo">Equipe</h1>
+            <p class="admin-head__lead">Para incluir alguém, peça para a pessoa abrir este painel e tocar em “Ainda não tenho acesso”. Depois, escolha aqui o que ela pode fazer.</p>
+          </div>
+        </div>
+        <dl class="roles-help">
+          <div><dt>Membro</dt><dd>Ainda sem acesso ao painel.</dd></div>
+          <div><dt>Líder</dt><dd>Cria eventos do ministério como rascunho, para um editor publicar.</dd></div>
+          <div><dt>Editor</dt><dd>Cria, edita, publica e exclui qualquer evento.</dd></div>
+          <div><dt>Administrador</dt><dd>Tudo do editor e define o papel da equipe.</dd></div>
+        </dl>
+        <p class="form-message" role="alert" data-team-error hidden></p>
+        <ul class="team-list" data-team-list></ul>
+      </section>
+    </main>
+  </div>
+
+  <!-- ================= Editor de evento ================= -->
+  <dialog class="editor" data-editor aria-labelledby="editor-title">
+    <form class="editor__form" data-editor-form novalidate>
+      <header class="editor__head">
+        <h2 class="editor__title" id="editor-title" data-editor-title>Novo evento</h2>
+        <button class="icon-close" type="button" data-editor-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="editor__body">
+        <p class="form-message" data-editor-message role="alert" hidden></p>
+
+        <fieldset class="editor__group">
+          <legend>Sobre o evento</legend>
+          <div class="field">
+            <input class="field__control" id="ev-titulo" name="titulo" type="text" maxlength="120" placeholder=" ">
+            <label class="field__label" for="ev-titulo">Nome do evento</label>
+            <p class="field__hint field__error" data-error-for="titulo" hidden></p>
+          </div>
+          <div class="editor__row editor__row--2">
+            <div class="field field--static">
+              <select class="field__control" id="ev-categoria" name="categoria"></select>
+              <label class="field__label" for="ev-categoria">Categoria</label>
+              <p class="field__hint field__error" data-error-for="categoria" hidden></p>
+            </div>
+            <div class="field">
+              <input class="field__control" id="ev-local" name="local" type="text" maxlength="120" placeholder=" ">
+              <label class="field__label" for="ev-local">Local (opcional)</label>
+              <p class="field__hint field__error" data-error-for="local" hidden></p>
+            </div>
+          </div>
+          <div class="field">
+            <textarea class="field__control" id="ev-descricao" name="descricao" maxlength="2000" rows="3" placeholder=" "></textarea>
+            <label class="field__label" for="ev-descricao">Descrição (opcional)</label>
+            <div class="field__meta">
+              <span class="field__error" data-error-for="descricao" hidden></span>
+              <span class="field__counter" data-count-for="descricao">0/2000</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Quando</legend>
+          <div class="editor__row">
+            <div class="field field--static">
+              <input class="field__control" id="ev-data" name="dataInicio" type="date">
+              <label class="field__label" for="ev-data">Data</label>
+              <p class="field__hint field__error" data-error-for="dataInicio" hidden></p>
+            </div>
+            <div class="field field--static">
+              <input class="field__control" id="ev-hora" name="horaInicio" type="time">
+              <label class="field__label" for="ev-hora">Começa</label>
+              <p class="field__hint field__error" data-error-for="horaInicio" hidden></p>
+            </div>
+            <div class="field field--static">
+              <input class="field__control" id="ev-hora-fim" name="horaFim" type="time">
+              <label class="field__label" for="ev-hora-fim">Termina (opcional)</label>
+              <p class="field__hint field__error" data-error-for="horaFim" hidden></p>
+            </div>
+          </div>
+          <label class="switch">
+            <span>Termina em outro dia</span>
+            <input type="checkbox" name="multiDia" role="switch">
+          </label>
+          <div class="field field--static" data-end-date hidden>
+            <input class="field__control" id="ev-data-fim" name="dataFim" type="date">
+            <label class="field__label" for="ev-data-fim">Data de término</label>
+            <p class="field__hint field__error" data-error-for="dataFim" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Repetição</legend>
+          <div class="field field--static">
+            <select class="field__control" id="ev-recorrencia" name="recorrencia">
+              <option value="">Não se repete</option>
+              <option value="semanal">Toda semana</option>
+              <option value="quinzenal">A cada 15 dias</option>
+              <option value="mensal">Todo mês, no mesmo dia</option>
+            </select>
+            <label class="field__label" for="ev-recorrencia">Repetir</label>
+            <p class="field__hint field__error" data-error-for="recorrencia" hidden></p>
+          </div>
+          <div class="editor__repeat" data-repeat-options hidden>
+            <div class="field field--static">
+              <input class="field__control" id="ev-ate" name="recorrenciaAte" type="date">
+              <label class="field__label" for="ev-ate">Repetir até (opcional)</label>
+              <p class="field__hint field__error" data-error-for="recorrenciaAte" hidden></p>
+            </div>
+            <div class="exceptions">
+              <p class="editor__label" id="excecoes-titulo">Datas em que não vai acontecer</p>
+              <div class="exceptions__add">
+                <input class="field__control field__control--compact" type="date" aria-labelledby="excecoes-titulo" data-exception-input>
+                <button class="btn btn--secondary" type="button" data-exception-add>Adicionar</button>
+              </div>
+              <ul class="tags" data-exceptions></ul>
+              <p class="field__hint field__error" data-error-for="excecoes" hidden></p>
+            </div>
+          </div>
+          <label class="switch">
+            <span>Culto fixo<small>Aparece em “Cultos” e na contagem regressiva do site.</small></span>
+            <input type="checkbox" name="ehCulto" role="switch">
+          </label>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Inscrição</legend>
+          <label class="switch">
+            <span>Evento por inscrição<small>Mostra “Inscreva‑se” no site, com destaque fixo acima da lista de eventos.</small></span>
+            <input type="checkbox" name="porInscricao" role="switch">
+          </label>
+          <div class="field field--static" data-vagas-field hidden>
+            <input class="field__control" id="ev-vagas" name="vagas" type="number" min="1" step="1" inputmode="numeric" placeholder=" ">
+            <label class="field__label" for="ev-vagas">Limite de vagas (opcional)</label>
+            <p class="field__hint field__error" data-error-for="vagas" hidden></p>
+          </div>
+          <div class="registrants" data-registrants-box hidden>
+            <p class="editor__label">Inscritos <span data-registrants-count></span></p>
+            <ul class="registrants__list" data-registrants-list></ul>
+            <button class="btn btn--secondary" type="button" data-registrants-csv>Baixar CSV</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Imagem</legend>
+          <div class="image-picker">
+            <div class="image-picker__preview">
+              <img data-image-preview alt="" hidden>
+            </div>
+            <div class="image-picker__actions">
+              <label class="btn btn--secondary file-button">
+                Enviar foto
+                <input type="file" name="arquivo" accept="image/jpeg,image/png,image/webp,image/avif">
+              </label>
+              <button class="text-button" type="button" data-image-remove hidden>Remover imagem</button>
+              <div class="field">
+                <input class="field__control" id="ev-imagem" name="imagemUrl" type="url" inputmode="url" placeholder=" ">
+                <label class="field__label" for="ev-imagem">Ou cole um link (https://…)</label>
+                <p class="field__hint field__error" data-error-for="imagemUrl" hidden></p>
+              </div>
+              <p class="field__hint">JPG, PNG ou WebP de até 5 MB. Fotos na horizontal ficam melhores.</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Publicação</legend>
+          <label class="switch">
+            <span>Publicado<small>Visível para todos no site e no app.</small></span>
+            <input type="checkbox" name="publicado" role="switch">
+          </label>
+          <p class="field__hint" data-lider-hint hidden>Como líder, seu evento fica salvo como rascunho até um editor revisar e publicar.</p>
+        </fieldset>
+      </div>
+
+      <footer class="editor__foot">
+        <button class="btn btn--danger-ghost" type="button" data-editor-delete hidden>Excluir</button>
+        <span class="editor__spacer"></span>
+        <button class="btn btn--secondary" type="button" data-editor-close>Cancelar</button>
+        <button class="btn" type="submit" data-editor-save>Salvar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ================= Editor de célula ================= -->
+  <dialog class="editor" data-cell-editor aria-labelledby="cell-editor-title">
+    <form class="editor__form" data-cell-form novalidate>
+      <header class="editor__head">
+        <h2 class="editor__title" id="cell-editor-title" data-cell-editor-title>Nova célula</h2>
+        <button class="icon-close" type="button" data-cell-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="editor__body">
+        <p class="form-message" data-cell-message role="alert" hidden></p>
+
+        <fieldset class="editor__group">
+          <legend>Sobre a célula</legend>
+          <div class="field">
+            <input class="field__control" id="cel-nome" name="nome" type="text" maxlength="80" placeholder=" ">
+            <label class="field__label" for="cel-nome">Nome da célula</label>
+            <p class="field__hint field__error" data-error-for="nome" hidden></p>
+          </div>
+          <div class="editor__row editor__row--2">
+            <div class="field field--static">
+              <select class="field__control" id="cel-perfil" name="perfil"></select>
+              <label class="field__label" for="cel-perfil">Perfil</label>
+              <p class="field__hint field__error" data-error-for="perfil" hidden></p>
+            </div>
+            <div class="field">
+              <input class="field__control" id="cel-lider" name="lider" type="text" maxlength="80" placeholder=" ">
+              <label class="field__label" for="cel-lider">Líder(es) (opcional)</label>
+              <p class="field__hint field__error" data-error-for="lider" hidden></p>
+            </div>
+          </div>
+          <div class="editor__row editor__row--2">
+            <div class="field field--static">
+              <select class="field__control" id="cel-dia" name="diaSemana"></select>
+              <label class="field__label" for="cel-dia">Dia da semana</label>
+              <p class="field__hint field__error" data-error-for="diaSemana" hidden></p>
+            </div>
+            <div class="field field--static">
+              <input class="field__control" id="cel-horario" name="horario" type="time">
+              <label class="field__label" for="cel-horario">Horário</label>
+              <p class="field__hint field__error" data-error-for="horario" hidden></p>
+            </div>
+          </div>
+          <div class="field">
+            <textarea class="field__control" id="cel-descricao" name="descricao" maxlength="500" rows="2" placeholder=" "></textarea>
+            <label class="field__label" for="cel-descricao">Descrição (opcional)</label>
+            <div class="field__meta">
+              <span class="field__error" data-error-for="descricao" hidden></span>
+              <span class="field__counter" data-count-for="cell-descricao">0/500</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Onde acontece</legend>
+          <div class="geo-row">
+            <div class="field">
+              <input class="field__control" id="cel-endereco" name="endereco" type="text" maxlength="200" autocomplete="off" placeholder=" ">
+              <label class="field__label" for="cel-endereco">Endereço (rua e número)</label>
+              <p class="field__hint field__error" data-error-for="endereco" hidden></p>
+            </div>
+            <button class="btn btn--secondary" type="button" data-cell-geocode>Buscar no mapa</button>
+          </div>
+          <div class="editor__row editor__row--2">
+            <div class="field">
+              <input class="field__control" id="cel-bairro" name="bairro" type="text" maxlength="80" placeholder=" ">
+              <label class="field__label" for="cel-bairro">Bairro</label>
+              <p class="field__hint field__error" data-error-for="bairro" hidden></p>
+            </div>
+            <div class="field">
+              <input class="field__control" id="cel-referencia" name="referencia" type="text" maxlength="120" placeholder=" ">
+              <label class="field__label" for="cel-referencia">Ponto de referência (opcional)</label>
+              <p class="field__hint field__error" data-error-for="referencia" hidden></p>
+            </div>
+          </div>
+          <div class="map-surface cell-map" data-cell-map role="region" aria-label="Mapa para marcar o local da célula"></div>
+          <p class="field__hint" data-cell-map-status aria-live="polite">Busque o endereço ou toque no mapa para marcar o local.</p>
+          <p class="field__hint field__error" data-error-for="mapa" hidden></p>
+          <p class="field__hint">Endereço e referência ficam visíveis só para a equipe.</p>
+          <label class="switch">
+            <span>Mostrar endereço completo no site<small>Deixe desligado quando for a casa de alguém: o site mostra só o bairro e um ponto aproximado.</small></span>
+            <input type="checkbox" name="mostrarEndereco" role="switch">
+          </label>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Publicação</legend>
+          <label class="switch">
+            <span>Publicada<small>Aparece no mapa do site e no app.</small></span>
+            <input type="checkbox" name="publicado" role="switch">
+          </label>
+        </fieldset>
+      </div>
+
+      <footer class="editor__foot">
+        <button class="btn btn--danger-ghost" type="button" data-cell-delete hidden>Excluir</button>
+        <span class="editor__spacer"></span>
+        <button class="btn btn--secondary" type="button" data-cell-close>Cancelar</button>
+        <button class="btn" type="submit" data-cell-save>Salvar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ================= Editor de devocional ================= -->
+  <dialog class="editor" data-devotional-editor aria-labelledby="devotional-editor-title">
+    <form class="editor__form" data-devotional-form novalidate>
+      <header class="editor__head">
+        <h2 class="editor__title" id="devotional-editor-title" data-devotional-editor-title>Novo devocional</h2>
+        <button class="icon-close" type="button" data-devotional-close aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="editor__body">
+        <p class="form-message" data-devotional-message role="alert" hidden></p>
+
+        <fieldset class="editor__group">
+          <legend>Quando</legend>
+          <div class="field field--static">
+            <input class="field__control" id="dev-data" name="data" type="date">
+            <label class="field__label" for="dev-data">Data</label>
+            <p class="field__hint field__error" data-error-for="data" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Versículo</legend>
+          <div class="verse-picker">
+            <div class="field field--static">
+              <select class="field__control" id="dev-tema" data-devotional-tema>
+                <option value="">Buscar por tema (opcional)</option>
+              </select>
+              <label class="field__label" for="dev-tema">Sugerir por tema</label>
+            </div>
+            <ul class="verse-suggestions" data-devotional-sugestoes hidden></ul>
+            <p class="field__hint">Sugestões em Almeida Revista e Corrigida (ARC) — confira na sua Bíblia antes de publicar.</p>
+          </div>
+          <div class="field">
+            <input class="field__control" id="dev-referencia" name="versiculoReferencia" type="text" maxlength="60" placeholder=" ">
+            <label class="field__label" for="dev-referencia">Referência (ex.: João 3:16)</label>
+            <p class="field__hint field__error" data-error-for="versiculoReferencia" hidden></p>
+          </div>
+          <div class="field">
+            <textarea class="field__control" id="dev-versiculo" name="versiculoTexto" maxlength="600" rows="2" placeholder=" "></textarea>
+            <label class="field__label" for="dev-versiculo">Texto do versículo</label>
+            <div class="field__meta">
+              <span class="field__error" data-error-for="versiculoTexto" hidden></span>
+              <span class="field__counter" data-count-for="dev-versiculo">0/600</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Reflexão</legend>
+          <div class="field">
+            <textarea class="field__control" id="dev-texto" name="texto" maxlength="2000" rows="4" placeholder=" "></textarea>
+            <label class="field__label" for="dev-texto">Texto do dia</label>
+            <div class="field__meta">
+              <span class="field__error" data-error-for="texto" hidden></span>
+              <span class="field__counter" data-count-for="dev-texto">0/2000</span>
+            </div>
+          </div>
+          <div class="field">
+            <input class="field__control" id="dev-autor" name="autor" type="text" maxlength="80" placeholder=" ">
+            <label class="field__label" for="dev-autor">Assinado por (opcional)</label>
+            <p class="field__hint field__error" data-error-for="autor" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="editor__group">
+          <legend>Publicação</legend>
+          <label class="switch">
+            <span>Publicado<small>Visível no site a partir da data escolhida.</small></span>
+            <input type="checkbox" name="publicado" role="switch">
+          </label>
+        </fieldset>
+      </div>
+
+      <footer class="editor__foot">
+        <button class="btn btn--danger-ghost" type="button" data-devotional-delete hidden>Excluir</button>
+        <span class="editor__spacer"></span>
+        <button class="btn btn--secondary" type="button" data-devotional-close>Cancelar</button>
+        <button class="btn" type="submit" data-devotional-save>Salvar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ================= Confirmação ================= -->
+  <dialog class="confirm" data-confirm aria-labelledby="confirm-title">
+    <h2 id="confirm-title" data-confirm-title>Tem certeza?</h2>
+    <p data-confirm-text></p>
+    <div class="confirm__actions">
+      <button class="btn btn--secondary" type="button" data-confirm-cancel>Cancelar</button>
+      <button class="btn btn--danger" type="button" data-confirm-ok>Confirmar</button>
+    </div>
+  </dialog>
+</body>
+</html>
