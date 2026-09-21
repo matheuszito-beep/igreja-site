@@ -55,7 +55,7 @@ igreja-site/
 | Nome, WhatsApp, e-mail, endereço, chave Pix, redes sociais | `assets/js/config.js` |
 | Textos das seções | `index.html` |
 | Cores e fontes | `assets/css/tokens.css` (o preto do menu e dos botões é `--color-solid`) |
-| Logo | `assets/img/logo-maanaim.png`, `logo-maanaim-completo.png` e `favicon.svg` |
+| Logo | `assets/img/logo-maanaim.png`, `logo-maanaim-completo.svg` e `favicon.svg` |
 | Nome e cor das categorias da agenda | Supabase → **Table Editor** → tabela `categorias` |
 | Vídeos em "Mensagens" | Nada a fazer — atualiza sozinho a partir do canal `youtube.com/@igjmaanaim` |
 
