@@ -56,9 +56,6 @@
   const mapsDirectionsUrl = () =>
     'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(config.endereco.busca);
 
-  const mapsEmbedUrl = () =>
-    'https://maps.google.com/maps?q=' + encodeURIComponent(config.endereco.busca) + '&z=16&output=embed';
-
   function openInNewTab(anchor, url) {
     anchor.href = url;
     anchor.target = '_blank';
@@ -73,7 +70,6 @@
     });
     $$('[data-whatsapp]').forEach((el) => openInNewTab(el, whatsappUrl(el.dataset.whatsapp)));
     $$('[data-maps]').forEach((el) => openInNewTab(el, mapsDirectionsUrl()));
-    $$('[data-map-embed]').forEach((frame) => { frame.src = mapsEmbedUrl(); });
     $$('[data-email]').forEach((el) => { el.href = 'mailto:' + config.contato.email; });
     $$('[data-social]').forEach((el) => {
       const url = config.redes[el.dataset.social];

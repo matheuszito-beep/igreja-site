@@ -141,6 +141,10 @@ select {
   color: var(--color-night-muted);
 }
 
+.section--night .lead {
+  color: var(--color-night-muted);
+}
+
 .title {
   font-family: var(--font-display);
   font-size: var(--text-2xl);

@@ -33,8 +33,8 @@ igreja-site/
 │   │   ├── mensagens-view.js   Escolhe o vídeo em destaque e a lista (testada)
 │   │   ├── mensagens-data.js   Busca os vídeos e o status "ao vivo" no Supabase
 │   │   ├── cached-resource.js  Cópia local dos dados no navegador
-│   │   ├── map-kit.js          Mapa (Leaflet + OpenStreetMap), carregado só quando precisa
-│   │   ├── site.js, home.js, calendar.js, agenda-carousel.js, celulas.js
+│   │   ├── map-kit.js          Mapa (Leaflet + tiles do OpenFreeMap), carregado só quando precisa
+│   │   ├── site.js, home.js, calendar.js, agenda-carousel.js, celulas.js, visit-map.js
 │   │   └── admin/              Painel: acesso, eventos, células e equipe
 │   ├── css/                ← tokens.css tem cores e fontes
 │   └── img/                Logo, favicon e fotos
@@ -85,7 +85,7 @@ igreja-site/
 - No painel, digite o endereço e toque em **Buscar no mapa**. O pino aparece sozinho e dá para arrastá-lo para ajustar. Se o endereço não for encontrado, toque direto no mapa.
 - O endereço completo e o ponto de referência ficam guardados à parte e **só editores e administradores veem**.
 - No site, cada célula aparece com o bairro e um **ponto aproximado** (arredondado em cerca de 100 m pelo próprio banco), para proteger as famílias. Para lugares públicos, como o salão da igreja, ligue **Mostrar endereço completo no site**.
-- O mapa usa OpenStreetMap (gratuito, sem chave). A busca de endereços usa o Nominatim, do OpenStreetMap, que pede uso moderado: uma busca por clique já respeita isso.
+- O mapa usa tiles vetoriais do OpenFreeMap, com dados do OpenStreetMap (gratuito, sem chave e sem limite de uso). A busca de endereços usa o Nominatim, do OpenStreetMap, que pede uso moderado: uma busca por clique já respeita isso.
 
 ### Mensagens (canal do YouTube)
 

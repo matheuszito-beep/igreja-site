@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/home.css">
   <link rel="stylesheet" href="assets/css/sections.css">
+  <link rel="stylesheet" href="assets/css/map.css">
 
   <script>document.documentElement.classList.add('js')</script>
   <script src="assets/js/config.js" defer></script>
@@ -38,8 +39,10 @@
   <script src="assets/js/mural-data.js" defer></script>
   <script src="assets/js/mensagens-view.js" defer></script>
   <script src="assets/js/mensagens-data.js" defer></script>
+  <script src="assets/js/map-kit.js" defer></script>
   <script src="assets/js/site.js" defer></script>
   <script src="assets/js/home.js" defer></script>
+  <script src="assets/js/visit-map.js" defer></script>
 
   <script type="application/ld+json">
   {
@@ -49,10 +52,10 @@
     "alternateName": "Batista Maanaim",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Rua Exemplo, 000",
+      "streetAddress": "Rua Água Marinha, 263",
       "addressLocality": "Cabreúva",
       "addressRegion": "SP",
-      "postalCode": "13315-000",
+      "postalCode": "13318-280",
       "addressCountry": "BR"
     }
   }
@@ -141,11 +144,11 @@
     <section class="hero" id="inicio" data-nav-label="Início" aria-labelledby="hero-title">
       <div class="container">
         <img class="hero__logo" src="assets/img/logo-maanaim-completo.svg" width="233" height="110" alt="1ª Igreja Batista Maanaim — Cabreúva" fetchpriority="high">
-        <h1 class="hero__title" id="hero-title">Um lugar<br>para pertencer.</h1>
-        <p class="hero__lead">Cultos aos domingos às 10h e às 19h. Venha como você está — tem um lugar esperando por você.</p>
+        <h1 class="hero__title" id="hero-title">Um lugar<br>para chamar de seu.</h1>
+        <p class="hero__lead">Há mais de três décadas, caminhamos juntos, vivendo a fé, cuidando de pessoas e compartilhando aquilo que Deus tem feito entre nós.</p>
         <div class="hero__cta">
-          <a class="btn" href="#visite">Planeje sua visita</a>
-          <a class="link-chevron" href="#mensagens">Assista às mensagens</a>
+          <a class="btn" href="#visite">Quero conhecer</a>
+          <a class="link-chevron" href="#cultos">Ver próximos cultos</a>
         </div>
       </div>
       <figure class="hero__media" data-hero-media>
@@ -207,7 +210,8 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2 class="headline" id="cultos-title" data-reveal>Cultos. <span class="headline__muted">Toda semana, portas abertas.</span></h2>
+            <h2 class="headline" id="cultos-title" data-reveal>Cultos. <span class="headline__muted">Sempre tem um lugar para você.</span></h2>
+            <p class="lead" style="margin-top: 0.75rem" data-reveal>Durante a semana, temos diferentes momentos para estarmos juntos. Venha como você está. Será uma alegria receber você.</p>
             <a class="link-chevron" href="eventos.html" style="margin-top: 0.75rem" data-reveal>Agenda completa</a>
           </div>
           <div class="carousel-controls">
@@ -229,7 +233,7 @@
     <section class="section section--alt" id="sobre" data-nav-label="Sobre nós" aria-labelledby="sobre-title">
       <div class="container">
         <h2 class="sr-only" id="sobre-title">Sobre nós</h2>
-        <p class="statement" data-statement>Acreditamos que a fé se vive em comunidade. Que cada pessoa importa. E que o amor de Deus transforma famílias, histórias e cidades inteiras.</p>
+        <p class="statement" data-statement>Acreditamos que a fé ganha vida quando caminhamos juntos. Cada pessoa tem seu lugar, sua história e seu jeito de chegar. E é bonito ver o que Deus faz quando essas histórias se encontram.</p>
 
         <div class="story">
           <figure class="story__media" data-reveal>
@@ -241,14 +245,15 @@
           </figure>
           <div class="story__text" data-reveal data-reveal-delay="120">
             <p class="eyebrow">Nossa história</p>
-            <h3 class="title">Mais de duas décadas caminhando juntos.</h3>
+            <h3 class="title">Há mais de três décadas, caminhando juntos.</h3>
             <p>Começamos em 2001 como um pequeno grupo de oração na sala de uma casa. Hoje somos uma família de milhares de pessoas que se reúnem aos domingos, nas células durante a semana e nas ações que servem o nosso bairro.</p>
             <div class="stats">
-              <div><span class="stat__value" data-count="25">25</span><span class="stat__label">anos de história</span></div>
+              <div><span class="stat__value" data-count="30" data-prefix="+">+30</span><span class="stat__label">anos de história</span></div>
               <div><span class="stat__value" data-count="18">18</span><span class="stat__label">ministérios</span></div>
               <div><span class="stat__value" data-count="64">64</span><span class="stat__label">células nos lares</span></div>
               <div><span class="stat__value" data-count="3200" data-prefix="+">+3.200</span><span class="stat__label">famílias atendidas por ano</span></div>
             </div>
+            <p>Cada número carrega uma história. Cada história carrega uma pessoa.</p>
           </div>
         </div>
       </div>
@@ -258,7 +263,10 @@
     <section class="section" id="ministerios" data-nav-label="Ministérios" aria-labelledby="ministerios-title">
       <div class="container">
         <div class="section-head">
-          <h2 class="headline" id="ministerios-title" data-reveal>Ministérios. <span class="headline__muted">Um lugar para cada idade.</span></h2>
+          <div>
+            <h2 class="headline" id="ministerios-title" data-reveal>Ministérios. <span class="headline__muted">Um lugar para cada fase da vida.</span></h2>
+            <p class="lead" style="margin-top: 0.75rem" data-reveal>Crianças, adolescentes, jovens, adultos e famílias. Existem diferentes formas de servir, aprender, crescer e viver a fé junto com outras pessoas.</p>
+          </div>
         </div>
         <div class="bento">
           <a class="tile tile--image tile--kids" data-whatsapp="Olá! Quero saber mais sobre o ministério Kids." data-reveal>
@@ -268,11 +276,11 @@
             <span class="tile__title">Maanaim Kids</span>
             <span class="tile__text">Um ambiente seguro, divertido e cheio de propósito para as crianças conhecerem Jesus desde cedo.</span>
           </a>
-          <a class="tile tile--image tile--jovens" data-whatsapp="Olá! Quero participar da Rede Jovem." data-reveal data-reveal-delay="80">
+          <a class="tile tile--image tile--jovens" data-whatsapp="Olá! Quero participar do The Way." data-reveal data-reveal-delay="80">
             <img class="tile__img" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=75&auto=format&fit=crop" width="1200" height="600" alt="" loading="lazy">
             <span class="tile__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
             <span class="tile__eyebrow">Sábados, 19h30</span>
-            <span class="tile__title">Rede Jovem</span>
+            <span class="tile__title">The Way</span>
             <span class="tile__text">Amizades de verdade, fé que faz sentido.</span>
           </a>
           <a class="tile tile--image" data-whatsapp="Olá! Tenho interesse no ministério de louvor." data-reveal data-reveal-delay="120">
@@ -293,8 +301,8 @@
           <a class="tile tile--image tile--celulas" href="celulas.html" data-reveal>
             <img class="tile__img" src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1200&q=75&auto=format&fit=crop" width="1200" height="600" alt="" loading="lazy">
             <span class="tile__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
-            <span class="tile__eyebrow">Veja no mapa</span>
-            <span class="tile__title">Células nos lares</span>
+            <span class="tile__eyebrow">Células nos lares</span>
+            <span class="tile__title">GV</span>
             <span class="tile__text">Pequenos grupos em todos os bairros da cidade. Encontre o mais perto de você.</span>
           </a>
           <a class="tile tile--gradient tile--social" data-whatsapp="Olá! Quero ser voluntário na ação social." data-reveal data-reveal-delay="80">
@@ -312,7 +320,8 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2 class="headline" id="eventos-title" data-reveal>Próximos eventos.</h2>
+            <h2 class="headline" id="eventos-title" data-reveal>Tem coisa boa acontecendo por aqui.</h2>
+            <p class="lead" style="margin-top: 0.75rem" data-reveal>Encontros, programações e momentos especiais para estarmos juntos. Veja o que está chegando e venha participar.</p>
             <a class="link-chevron" href="eventos.html" style="margin-top: 0.75rem" data-reveal>Ver calendário completo</a>
           </div>
           <div class="carousel-controls">
@@ -333,7 +342,8 @@
     <section class="section section--night" id="mensagens" data-nav-label="Mensagens" aria-labelledby="mensagens-title">
       <div class="container">
         <div class="section-head">
-          <h2 class="headline" id="mensagens-title" data-reveal>Mensagens. <span class="headline__muted">Assista quando e onde quiser.</span></h2>
+          <h2 class="headline" id="mensagens-title" data-reveal>Mensagens. <span class="headline__muted">Para ouvir, guardar e compartilhar.</span></h2>
+          <p class="lead" style="margin-top: 0.75rem" data-reveal>Nem sempre conseguimos estar presentes em todos os momentos. Por isso, reunimos nossas mensagens para que você possa assistir, ouvir novamente e compartilhar com alguém.</p>
         </div>
         <div class="sermons" data-sermons>
           <noscript><p>Ative o JavaScript para ver as últimas mensagens.</p></noscript>
@@ -346,7 +356,8 @@
       <div class="container give">
         <div data-reveal>
           <p class="eyebrow">Dízimos e ofertas</p>
-          <h2 class="headline" id="contribua-title" style="margin-top: 0.5rem">Generosidade que transforma.</h2>
+          <h2 class="headline" id="contribua-title" style="margin-top: 0.5rem">Generosidade que faz parte da nossa caminhada.</h2>
+          <p class="lead" style="margin-top: 0.75rem">Quando cuidamos uns dos outros, também participamos do que Deus está fazendo. Cada contribuição ajuda a igreja a continuar servindo, acolhendo pessoas e colocando a fé em prática.</p>
           <ul class="give__list">
             <li>
               <span class="icon-bubble" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg></span>
@@ -363,7 +374,7 @@
           </ul>
         </div>
 
-        <div data-reveal data-reveal-delay="120">
+        <div class="give__wallet-col" data-reveal data-reveal-delay="120">
           <div class="wallet">
             <div class="pix-card" data-tilt>
               <div class="pix-card__top">
@@ -388,7 +399,9 @@
               Copiar chave Pix
             </button>
             <p class="give__bank">Transferência: <span data-config="pix.banco">Banco Exemplo · Ag. 0001 · C/C 12345-6</span></p>
+            <p class="give__thanks">Obrigado por fazer parte disso com a gente.</p>
           </div>
+          <div class="give__soon" aria-hidden="true"><span>Em breve</span></div>
         </div>
       </div>
     </section>
@@ -399,8 +412,8 @@
         <div class="prayer">
           <div data-reveal>
             <p class="eyebrow">Pedido de oração</p>
-            <h2 class="headline" id="oracao-title" style="margin-top: 0.5rem">Podemos orar por você?</h2>
-            <p class="lead" style="margin-top: 1.25rem">Conte o que está no seu coração. Nossa equipe de intercessão vai orar pelo seu pedido durante a semana.</p>
+            <h2 class="headline" id="oracao-title" style="margin-top: 0.5rem">Tem algo pelo que você gostaria que a gente orasse?</h2>
+            <p class="lead" style="margin-top: 1.25rem">Você não precisa passar por tudo sozinho. Se quiser, compartilhe seu pedido com a gente. Será um privilégio colocar sua vida e sua família em oração.</p>
             <p class="prayer__note">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>
               Seu pedido é tratado com carinho e sigilo. Ele é enviado direto para o WhatsApp da nossa equipe.
@@ -436,7 +449,7 @@
               <span>Mostrar meu nome no mural também<small>A gente confirma com você antes de publicar.</small></span>
               <input type="checkbox" name="muralNome" role="switch">
             </label>
-            <button class="btn btn--block" type="submit">Enviar pedido</button>
+            <button class="btn btn--block" type="submit">Enviar meu pedido</button>
             <p class="form-card__hint">Abre o WhatsApp com a sua mensagem pronta para enviar.</p>
           </form>
         </div>
@@ -468,12 +481,17 @@
         <div class="visit">
           <div data-reveal>
             <p class="eyebrow">Primeira vez?</p>
-            <h2 class="headline" id="visite-title" style="margin-top: 0.5rem">Planeje sua visita.</h2>
+            <h2 class="headline" id="visite-title" style="margin-top: 0.5rem">Pensando em nos visitar?</h2>
+            <p class="lead" style="margin-top: 0.75rem">Fique tranquilo. Aqui você encontra nossos horários, endereço e tudo o que precisa para chegar e se sentir à vontade.</p>
             <dl class="visit__info">
               <div>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                <dt data-config="endereco.linha1">Rua Exemplo, 000</dt>
-                <dd><span data-config="endereco.linha2">Novo Bonfim — Cabreúva, SP</span> · CEP <span data-config="endereco.cep">13315-000</span></dd>
+                <dt>Nossas unidades</dt>
+                <dd class="visit__units">
+                  <p><strong data-config="unidades.0.nome">Colina</strong> · sede — <span data-config="unidades.0.linha1">Rua Água Marinha, 263</span>, <span data-config="unidades.0.linha2">Jardim Colina da Serra — Cabreúva, SP</span></p>
+                  <p><strong data-config="unidades.1.nome">Novo Bonfim</strong> — <span data-config="unidades.1.linha1">Rua Montes Claros, 43</span>, <span data-config="unidades.1.linha2">Novo Bonfim — Cabreúva, SP</span></p>
+                  <p><strong data-config="unidades.2.nome">Centro</strong> — <span data-config="unidades.2.linha1">Rua Miguel Togni, 60</span>, <span data-config="unidades.2.linha2">Centro — Cabreúva, SP</span></p>
+                </dd>
               </div>
               <div>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M10 16V8h3a2.5 2.5 0 0 1 0 5h-3"/></svg>
@@ -495,21 +513,23 @@
               <a class="btn" href="#visite" data-maps>Como chegar</a>
               <a class="btn btn--secondary" href="#visite" data-whatsapp>Falar no WhatsApp</a>
             </div>
+            <p class="visit__note">Se tiver alguma dúvida antes de vir, fale com a gente. Será um prazer ajudar.</p>
           </div>
-          <div class="map" data-reveal data-reveal-delay="120">
-            <iframe data-map-embed title="Mapa com a localização da igreja" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <div class="visit-map map-surface" data-reveal data-reveal-delay="120" data-visit-map role="region" aria-label="Mapa com as unidades da igreja">
+            <p class="map-surface__status" data-visit-map-status>Carregando mapa…</p>
           </div>
         </div>
 
         <div class="faq">
-          <h3 class="title" data-reveal>Perguntas frequentes.</h3>
+          <h3 class="title" data-reveal>Tudo o que você quer saber antes de vir.</h3>
+          <p class="lead" style="margin-top: 0.5rem; margin-bottom: 1.5rem" data-reveal>Reunimos algumas respostas para ajudar você a chegar mais tranquilo. E, se ainda ficar alguma dúvida, pode falar com a gente.</p>
           <details data-reveal>
             <summary>Preciso ser membro para participar?</summary>
             <p class="faq__answer">Não. Todos os cultos e a maioria dos eventos são abertos a qualquer pessoa. Se quiser se tornar membro, temos um encontro de integração uma vez por mês.</p>
           </details>
           <details data-reveal>
             <summary>Como devo me vestir?</summary>
-            <p class="faq__answer">Do jeito que você se sentir confortável. Aqui você vai encontrar gente de terno e gente de bermuda.</p>
+            <p class="faq__answer">Do jeito que você se sentir mais confortável. Não existe uma forma certa de se vestir para vir à igreja.</p>
           </details>
           <details data-reveal>
             <summary>Quanto tempo dura o culto?</summary>
@@ -535,7 +555,7 @@
       <div class="site-footer__grid">
         <div class="site-footer__brand">
           <img class="site-footer__logo" src="assets/img/logo-maanaim.png" width="118" height="44" alt="Batista Maanaim">
-          <p><span data-config="nomeCompleto">1ª Igreja Batista Maanaim</span> — uma igreja para toda a família em Cabreúva.</p>
+          <p><span data-config="nomeCompleto">1ª Igreja Batista Maanaim</span>. Um lugar para caminhar junto.</p>
         </div>
         <nav aria-label="A igreja">
           <h3>A igreja</h3>

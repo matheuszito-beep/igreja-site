@@ -30,13 +30,50 @@ window.SITE_CONFIG = Object.freeze({
     mensagemPadrao: 'Olá! Vim pelo site da igreja e gostaria de mais informações.',
   }),
 
+  // Endereço usado no rodapé, no botão "Como chegar" padrão e nos dados estruturados (SEO): a sede (Colina).
   endereco: Object.freeze({
-    linha1: 'Rua Exemplo, 000',
-    linha2: 'Novo Bonfim — Cabreúva, SP',
-    cep: '13315-000',
+    linha1: 'Rua Água Marinha, 263',
+    linha2: 'Jardim Colina da Serra — Cabreúva, SP',
+    cep: '13318-280',
     // Texto usado no Google Maps (mapa e "Como chegar"). Com o endereço completo o pino fica exato.
-    busca: 'Novo Bonfim, Cabreúva - SP',
+    busca: 'Rua Água Marinha, 263, Jardim Colina da Serra, Cabreúva - SP',
   }),
+
+  // As 3 unidades da igreja, mostradas no mapa geral da seção "Planeje sua visita".
+  // Coordenadas: Colina e Novo Bonfim geocodificadas pelo Nominatim (OpenStreetMap);
+  // Centro veio do pino exato do Google Maps (o OpenStreetMap ainda não tem a rua mapeada).
+  unidades: Object.freeze([
+    Object.freeze({
+      id: 'colina',
+      nome: 'Colina',
+      principal: true,
+      linha1: 'Rua Água Marinha, 263',
+      linha2: 'Jardim Colina da Serra — Cabreúva, SP',
+      cep: '13318-280',
+      busca: 'Rua Água Marinha, 263, Jardim Colina da Serra, Cabreúva - SP',
+      coords: Object.freeze([-23.258993, -47.049576]),
+    }),
+    Object.freeze({
+      id: 'novo-bonfim',
+      nome: 'Novo Bonfim',
+      principal: false,
+      linha1: 'Rua Montes Claros, 43',
+      linha2: 'Novo Bonfim — Cabreúva, SP',
+      cep: '13315-000',
+      busca: 'Rua Montes Claros, 43, Novo Bonfim, Cabreúva - SP',
+      coords: Object.freeze([-23.280725, -47.061311]),
+    }),
+    Object.freeze({
+      id: 'centro',
+      nome: 'Centro',
+      principal: false,
+      linha1: 'Rua Miguel Togni, 60',
+      linha2: 'Centro — Cabreúva, SP',
+      cep: '13315-000',
+      busca: 'Rua Miguel Togni, 60, Centro, Cabreúva - SP',
+      coords: Object.freeze([-23.306067, -47.132857]),
+    }),
+  ]),
 
   pix: Object.freeze({
     chave: '00.000.000/0001-00',

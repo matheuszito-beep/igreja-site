@@ -351,6 +351,30 @@
   perspective: 1200px;
 }
 
+.give__wallet-col {
+  position: relative;
+}
+
+.give__soon {
+  position: absolute;
+  inset: -1rem;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+}
+
+.give__soon span {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
 .pix-card {
   --rx: 0deg;
   --ry: 0deg;
@@ -433,6 +457,12 @@
 }
 
 .give__bank {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.give__thanks {
+  margin-top: 0.75rem;
   color: var(--color-muted);
   font-size: var(--text-sm);
 }
@@ -578,22 +608,23 @@
   margin-top: 2.25rem;
 }
 
-.map {
-  position: relative;
-  min-height: 420px;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-2);
+.visit__note {
+  margin-top: 1rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
 }
 
-/* Tamanho definido desde o carregamento: o Google Maps não redesenha bem se o iframe crescer depois. */
-.map iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  filter: saturate(0.85);
+.visit__units p {
+  margin: 0 0 0.35rem;
+}
+
+.visit__units p:last-child {
+  margin-bottom: 0;
+}
+
+.visit-map {
+  min-height: 420px;
+  box-shadow: var(--shadow-soft);
 }
 
 .faq {
@@ -671,6 +702,5 @@
 
 @media (max-width: 600px) {
   .sermon-item { grid-template-columns: 112px 1fr; }
-  .map,
-  .map iframe { min-height: 320px; }
+  .visit-map { min-height: 320px; }
 }
