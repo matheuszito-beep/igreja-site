@@ -66,6 +66,22 @@ function hojeNoBrasil(): { chave: string; diaDoAno: number } {
   return { chave, diaDoAno };
 }
 
+async function avisarDevocional(referencia: string): Promise<void> {
+  try {
+    await fetch(SUPABASE_URL + '/functions/v1/send-push', {
+      method: 'POST',
+      headers: { apikey: SERVICE_ROLE_KEY, Authorization: 'Bearer ' + SERVICE_ROLE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        titulo: 'Devocional de hoje',
+        corpo: referencia,
+        url: '/#inicio',
+      }),
+    });
+  } catch (error) {
+    console.error('[auto-devocional] Não foi possível avisar quem tem notificação ativada.', error);
+  }
+}
+
 Deno.serve(async () => {
   try {
     const { chave, diaDoAno } = hojeNoBrasil();
@@ -73,14 +89,16 @@ Deno.serve(async () => {
 
     // Prefer: resolution=ignore-duplicates + on_conflict=data faz o insert só
     // acontecer se ainda não existir um devocional para hoje — se a equipe já
-    // cadastrou um na mão, este envio é simplesmente ignorado.
+    // cadastrou um na mão, este envio é simplesmente ignorado. Combinado com
+    // return=representation, a resposta só traz a linha quando ela foi
+    // realmente inserida agora — é assim que sabemos se devemos avisar.
     const response = await fetch(SUPABASE_URL + '/rest/v1/devocionais?on_conflict=data', {
       method: 'POST',
       headers: {
         apikey: SERVICE_ROLE_KEY,
         Authorization: 'Bearer ' + SERVICE_ROLE_KEY,
         'Content-Type': 'application/json',
-        Prefer: 'resolution=ignore-duplicates',
+        Prefer: 'resolution=ignore-duplicates,return=representation',
       },
       body: JSON.stringify({
         data: chave,
@@ -92,8 +110,10 @@ Deno.serve(async () => {
       }),
     });
     if (!response.ok) throw new Error('devocionais: a gravação respondeu ' + response.status + ' — ' + (await response.text()).slice(0, 300));
+    const inserted: unknown[] = await response.json();
+    if (inserted.length > 0) await avisarDevocional(verso.referencia);
 
-    return new Response(JSON.stringify({ data: chave, referencia: verso.referencia }), {
+    return new Response(JSON.stringify({ data: chave, referencia: verso.referencia, criado: inserted.length > 0 }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {

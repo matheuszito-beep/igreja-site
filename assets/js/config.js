@@ -16,6 +16,10 @@ window.SITE_CONFIG = Object.freeze({
     chavePublica: 'sb_publishable_xgMndWnGmDjDpsyXLUC7lw_bIk4j0eK',
   }),
 
+  // Chave pública de notificação push (VAPID) — pode ficar no site, é feita pra isso.
+  // A chave privada correspondente fica só no Supabase (variável de ambiente da Edge Function).
+  vapidPublicKey: 'BBenpBK6OiA5arEb7BaKFo8mNWS63tM-EPZdYJ0fKnMRNd5fizT7ulpl1XdEXVgIr415bvhHFNomC6BPvkf3NaI',
+
   // Mapa das células: ponto de partida quando ainda não há células para enquadrar.
   mapa: Object.freeze({
     centro: Object.freeze([-23.2804, -47.0613]),

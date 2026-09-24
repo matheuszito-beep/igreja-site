@@ -43,7 +43,7 @@ igreja-site/
 ├── BACKLOG.md              Atualizações futuras e pendências (não precisa subir)
 ├── supabase/
 │   ├── migrations/         Estrutura e permissões do banco (não precisa subir)
-│   └── functions/sync-youtube/  Edge Function que sincroniza o canal do YouTube (não precisa subir)
+│   └── functions/          Edge Functions: sync-youtube, auto-devocional e send-push (não precisa subir)
 ├── tests/                  Testes automáticos (não precisa subir)
 └── tools/serve.mjs         Servidor local (não precisa subir)
 ```
@@ -103,6 +103,12 @@ igreja-site/
 - A equipe pode cadastrar o devocional pelo painel (aba **Devocional**) a qualquer momento — mas se um dia ninguém cadastrar, uma **Edge Function** (`supabase/functions/auto-devocional`) cria sozinha, todo dia às 6h, um devocional só com um versículo (sem reflexão), escolhido de uma lista de 30 já revisados. Se a equipe já tiver cadastrado o de hoje, a função não faz nada.
 - A reflexão (`texto`) é **opcional**: um devocional pode ter só o versículo, sem parecer que falta algo.
 - Para trocar ou ampliar os versículos usados pela função automática, edite `assets/js/versiculos-banco.js` (usado também nas sugestões do painel) **e** a lista `VERSICULOS` em `supabase/functions/auto-devocional/index.ts`, depois publique a função de novo.
+
+### Notificação push
+
+- O botão **Notificações**, na barra de navegação, funciona sem precisar de login — qualquer visitante pode ativar. O aparelho fica salvo na tabela `push_tokens`.
+- A Edge Function `send-push` dispara os avisos. Quem chama ela: `sync-youtube`, só na virada de "não ao vivo" para "ao vivo" (não a cada checagem de 10 min); e `auto-devocional`, quando publica um devocional novo pela manhã.
+- **Passo manual único:** a chave privada do VAPID precisa ser colada em Supabase → **Project Settings → Edge Functions → Secrets**, com o nome `VAPID_PRIVATE_KEY`. É a única credencial que não dá pra configurar por código — até isso ser feito, o botão de ativar funciona normalmente, só o envio em si fica pendente.
 
 ### Antes de colocar o site no ar
 

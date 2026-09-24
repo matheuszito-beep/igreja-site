@@ -423,7 +423,7 @@
 
 .island__actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
@@ -432,15 +432,28 @@
   justify-items: center;
   gap: 6px;
   padding: 14px 6px 12px;
+  border: 0;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-night-ink);
+  font: inherit;
   font-size: 12px;
   font-weight: 500;
   text-align: center;
+  cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--ease-standard),
     transform 400ms var(--ease-out-expo);
+}
+
+.island__action[aria-pressed="true"] {
+  background: rgba(48, 209, 88, 0.18);
+  color: var(--color-live);
+}
+
+.island__action:disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .island__action:hover {

@@ -98,18 +98,35 @@ async function upsert(table: string, body: Record<string, unknown> | Record<stri
   if (!response.ok) throw new Error(table + ': a gravação respondeu ' + response.status + ' — ' + (await response.text()).slice(0, 300));
 }
 
-async function readLastCheck(): Promise<number> {
-  const response = await fetch(SUPABASE_URL + '/rest/v1/canal_youtube?select=verificado_em&id=eq.youtube', {
+async function readLastState(): Promise<{ lastCheck: number; aoVivo: boolean }> {
+  const response = await fetch(SUPABASE_URL + '/rest/v1/canal_youtube?select=verificado_em,ao_vivo&id=eq.youtube', {
     headers: { apikey: SERVICE_ROLE_KEY, Authorization: 'Bearer ' + SERVICE_ROLE_KEY },
   });
-  if (!response.ok) return 0; // sem leitura anterior: segue e tenta sincronizar mesmo assim
+  if (!response.ok) return { lastCheck: 0, aoVivo: false }; // sem leitura anterior: segue e tenta sincronizar mesmo assim
   const [row] = await response.json();
-  return row ? new Date(row.verificado_em).getTime() : 0;
+  return row ? { lastCheck: new Date(row.verificado_em).getTime(), aoVivo: Boolean(row.ao_vivo) } : { lastCheck: 0, aoVivo: false };
+}
+
+/** Avisa quem ativou notificação só na virada de "não ao vivo" para "ao vivo" — não a cada checagem. */
+async function avisarAoVivo(titulo: string | null): Promise<void> {
+  try {
+    await fetch(SUPABASE_URL + '/functions/v1/send-push', {
+      method: 'POST',
+      headers: { apikey: SERVICE_ROLE_KEY, Authorization: 'Bearer ' + SERVICE_ROLE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        titulo: 'Estamos ao vivo agora',
+        corpo: titulo || 'O culto começou no canal do YouTube. Toque para assistir.',
+        url: '/#mensagens',
+      }),
+    });
+  } catch (error) {
+    console.error('[sync-youtube] Não foi possível avisar quem tem notificação ativada.', error);
+  }
 }
 
 Deno.serve(async () => {
   try {
-    const lastCheck = await readLastCheck();
+    const { lastCheck, aoVivo: estavaAoVivo } = await readLastState();
     if (Date.now() - lastCheck < MIN_INTERVAL_MS) {
       return new Response(JSON.stringify({ pulado: true, motivo: 'sincronizado há poucos segundos' }), {
         headers: { 'Content-Type': 'application/json' },
@@ -143,6 +160,8 @@ Deno.serve(async () => {
       titulo: live.titulo,
       verificado_em: now,
     });
+
+    if (live.aoVivo && !estavaAoVivo) await avisarAoVivo(live.titulo);
 
     return new Response(JSON.stringify({ videos: videos.length, aoVivo: live.aoVivo }), {
       headers: { 'Content-Type': 'application/json' },
