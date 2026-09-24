@@ -20,6 +20,8 @@ igreja-site/
 ├── celulas.html            Mapa das células
 ├── admin/index.html        Painel da agenda (acesso da equipe)
 ├── 404.html                Página de erro
+├── manifest.json           Deixa o site instalável ("Adicionar à tela de início")
+├── sw.js                   Service worker (instalação + base para notificação push futura)
 ├── .htaccess               HTTPS, segurança, cache e compressão (Hostinger)
 ├── robots.txt
 ├── assets/
@@ -95,6 +97,12 @@ igreja-site/
 - **Detecção de "ao vivo":** usa a mesma página pública que o navegador de qualquer pessoa acessaria (`/channel/<id>/live`), não é uma API oficial do YouTube. Se o YouTube mudar essa página no futuro e a detecção parar de funcionar, o selo "Ao vivo" simplesmente deixa de aparecer — a lista de vídeos continua normal.
 - Para trocar o canal (ex.: outro perfil), edite a constante `CHANNEL_ID` no topo de `supabase/functions/sync-youtube/index.ts` e publique a função de novo (`deploy_edge_function` pelo Supabase, ou pelo painel do Supabase).
 - Para acompanhar a sincronização: Supabase → **Edge Functions → sync-youtube → Logs**, ou **Database → Cron Jobs**.
+
+### Devocional do dia
+
+- A equipe pode cadastrar o devocional pelo painel (aba **Devocional**) a qualquer momento — mas se um dia ninguém cadastrar, uma **Edge Function** (`supabase/functions/auto-devocional`) cria sozinha, todo dia às 6h, um devocional só com um versículo (sem reflexão), escolhido de uma lista de 30 já revisados. Se a equipe já tiver cadastrado o de hoje, a função não faz nada.
+- A reflexão (`texto`) é **opcional**: um devocional pode ter só o versículo, sem parecer que falta algo.
+- Para trocar ou ampliar os versículos usados pela função automática, edite `assets/js/versiculos-banco.js` (usado também nas sugestões do painel) **e** a lista `VERSICULOS` em `supabase/functions/auto-devocional/index.ts`, depois publique a função de novo.
 
 ### Antes de colocar o site no ar
 

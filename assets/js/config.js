@@ -83,7 +83,7 @@ window.SITE_CONFIG = Object.freeze({
   }),
 
   redes: Object.freeze({
-    instagram: 'https://www.instagram.com/',
+    instagram: 'https://www.instagram.com/batistamaanaim_/',
     youtube: 'https://www.youtube.com/@igjmaanaim',
     spotify: 'https://open.spotify.com/',
   }),

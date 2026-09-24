@@ -177,7 +177,9 @@
     $('[data-devotional-eyebrow]', card).textContent = devotional.eDeHoje ? 'Devocional do dia' : 'Devocional';
     $('[data-devotional-versiculo]', card).textContent = '“' + devotional.versiculoTexto + '”';
     $('[data-devotional-referencia]', card).textContent = devotional.versiculoReferencia;
-    $('[data-devotional-reflexao]', card).textContent = devotional.texto;
+    const reflexao = $('[data-devotional-reflexao]', card);
+    reflexao.textContent = devotional.texto || '';
+    reflexao.hidden = !devotional.texto;
     const autor = $('[data-devotional-autor]', card);
     autor.textContent = devotional.autor ? '— ' + devotional.autor : '';
     autor.hidden = !devotional.autor;

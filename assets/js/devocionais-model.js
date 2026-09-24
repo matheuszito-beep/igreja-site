@@ -62,7 +62,7 @@
       data: clean(values.data),
       versiculo_referencia: clean(values.versiculoReferencia),
       versiculo_texto: clean(values.versiculoTexto),
-      texto: clean(values.texto),
+      texto: orNull(values.texto),
       autor: orNull(values.autor),
       publicado: Boolean(values.publicado),
     };
@@ -83,9 +83,11 @@
     checkLength(errors, 'versiculoTexto', values.versiculoTexto, {
       min: VERSE_MIN, max: VERSE_MAX, required: 'Escreva o texto do versículo.',
     });
-    checkLength(errors, 'texto', values.texto, {
-      min: TEXT_MIN, max: TEXT_MAX, required: 'Escreva a reflexão do dia.',
-    });
+    if (clean(values.texto).length > 0) {
+      checkLength(errors, 'texto', values.texto, {
+        min: TEXT_MIN, max: TEXT_MAX, required: 'Se escrever uma reflexão, use pelo menos ' + TEXT_MIN + ' caracteres.',
+      });
+    }
     checkLength(errors, 'autor', values.autor, { max: AUTHOR_MAX });
     return { valid: Object.keys(errors).length === 0, errors };
   }

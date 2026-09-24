@@ -70,6 +70,10 @@ describe('formToRow', () => {
   test('guarda autor em branco como nulo', () => {
     assert.equal(model.formToRow({ ...validForm, autor: '  ' }).autor, null);
   });
+
+  test('guarda texto em branco como nulo', () => {
+    assert.equal(model.formToRow({ ...validForm, texto: '  ' }).texto, null);
+  });
 });
 
 describe('rowToForm', () => {
@@ -92,7 +96,7 @@ describe('validateDevotionalForm', () => {
     assert.deepEqual(model.validateDevotionalForm(validForm), { valid: true, errors: {} });
   });
 
-  test('exige data, referência, versículo e texto', () => {
+  test('exige data, referência e versículo', () => {
     const { valid, errors } = model.validateDevotionalForm({
       ...validForm, data: '', versiculoReferencia: '', versiculoTexto: '', texto: '',
     });
@@ -100,6 +104,16 @@ describe('validateDevotionalForm', () => {
     assert.ok(errors.data);
     assert.ok(errors.versiculoReferencia);
     assert.ok(errors.versiculoTexto);
+    assert.equal(errors.texto, undefined);
+  });
+
+  test('não exige texto (reflexão é opcional)', () => {
+    const { valid } = model.validateDevotionalForm({ ...validForm, texto: '' });
+    assert.equal(valid, true);
+  });
+
+  test('se a reflexão for preenchida, exige um tamanho mínimo', () => {
+    const { errors } = model.validateDevotionalForm({ ...validForm, texto: 'curto' });
     assert.ok(errors.texto);
   });
 

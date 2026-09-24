@@ -337,6 +337,16 @@
     });
   }
 
+  /** Registra o service worker (site instalável como app, base para notificação push no futuro). */
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch((error) => {
+        console.error('[site] Não foi possível registrar o service worker.', error);
+      });
+    });
+  }
+
   /* ---------- Inicialização ---------- */
   toastEl = h('div', { class: 'toast', role: 'status', 'aria-live': 'polite' });
   document.body.append(toastEl);
@@ -346,6 +356,7 @@
   initAccountWidget();
   initCopyButtons();
   initNextService();
+  registerServiceWorker();
   $$('[data-reveal]').forEach(observeReveal);
 
   window.Site = Object.freeze({
