@@ -18,6 +18,13 @@
   const supported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
   const client = window.SupabaseRest.create({ url: config.supabase.url, key: config.supabase.chavePublica });
 
+  // No iPhone/iPad, a Apple só permite notificação push depois que o site é adicionado
+  // à Tela de Início e aberto por esse ícone (não direto pelo Safari) — mesmo com tudo
+  // certo no código, tentar ativar fora desse modo sempre falha.
+  const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const iosPrecisaInstalar = isIOS && !isStandalone;
+
   function urlBase64ToUint8Array(base64) {
     const padding = '='.repeat((4 - (base64.length % 4)) % 4);
     const raw = window.atob((base64 + padding).replace(/-/g, '+').replace(/_/g, '/'));
@@ -83,6 +90,10 @@
   }
 
   async function toggle() {
+    if (iosPrecisaInstalar) {
+      Site.toast('No iPhone: toque em Compartilhar → Adicionar à Tela de Início, depois abra o site por esse ícone para ativar notificações.');
+      return;
+    }
     setBusy(true);
     try {
       const subscription = await currentSubscription();
@@ -102,6 +113,7 @@
       button.hidden = false;
       button.addEventListener('click', toggle);
     });
+    if (iosPrecisaInstalar) return;
     try {
       const subscription = await currentSubscription();
       setState(Boolean(subscription));
