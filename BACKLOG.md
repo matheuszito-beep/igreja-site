@@ -98,7 +98,7 @@ Todos os itens usam o mesmo Supabase do site (nenhum dado novo fica só no app).
 ### Prioridade sugerida
 
 1. ~~Login de membro~~ — pronto
-2. ~~Sua célula~~ — pronto · ~~Devocional~~ — pronto (push incluso) · ~~Culto ao vivo + push~~ — pronto (falta só colar a chave privada VAPID no Supabase, ver item 4)
+2. ~~Sua célula~~ — pronto · ~~Devocional~~ — pronto (push incluso) · ~~Culto ao vivo + push~~ — pronto, testado de ponta a ponta
 3. ~~Mural de oração~~ — pronto
 4. ~~Confirmação de presença~~ — pronto (sem pagamento; a parte paga fica parada)
 5. ~~Escalas de voluntários~~ — pronto, aviso automático incluso
