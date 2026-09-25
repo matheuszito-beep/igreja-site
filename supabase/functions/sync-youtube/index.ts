@@ -116,7 +116,7 @@ async function avisarAoVivo(titulo: string | null): Promise<void> {
       body: JSON.stringify({
         titulo: 'Estamos ao vivo agora',
         corpo: titulo || 'O culto começou no canal do YouTube. Toque para assistir.',
-        url: '/#mensagens',
+        url: '#mensagens',
       }),
     });
   } catch (error) {

@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
     webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
     const tokens = await listTokens();
-    const body = JSON.stringify({ title: payload.titulo, body: payload.corpo, url: payload.url || '/' });
+    const body = JSON.stringify({ title: payload.titulo, body: payload.corpo, url: payload.url || '.' });
 
     let enviados = 0;
     let removidos = 0;

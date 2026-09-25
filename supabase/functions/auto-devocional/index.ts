@@ -74,7 +74,7 @@ async function avisarDevocional(referencia: string): Promise<void> {
       body: JSON.stringify({
         titulo: 'Devocional de hoje',
         corpo: referencia,
-        url: '/#inicio',
+        url: '#inicio',
       }),
     });
   } catch (error) {
