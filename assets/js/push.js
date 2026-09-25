@@ -101,7 +101,7 @@
       else await activate();
     } catch (error) {
       console.error('[push] Não foi possível atualizar a notificação.', error);
-      Site.toast('Não foi possível atualizar as notificações agora.');
+      Site.toast(error && error.message ? error.message : 'Não foi possível atualizar as notificações agora.');
     } finally {
       setBusy(false);
     }
