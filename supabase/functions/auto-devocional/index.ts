@@ -66,14 +66,14 @@ function hojeNoBrasil(): { chave: string; diaDoAno: number } {
   return { chave, diaDoAno };
 }
 
-async function avisarDevocional(referencia: string): Promise<void> {
+async function avisarDevocional(verso: Verso): Promise<void> {
   try {
     await fetch(SUPABASE_URL + '/functions/v1/send-push', {
       method: 'POST',
       headers: { apikey: SERVICE_ROLE_KEY, Authorization: 'Bearer ' + SERVICE_ROLE_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        titulo: 'Devocional de hoje',
-        corpo: referencia,
+        titulo: 'Devocional de hoje: ' + verso.referencia,
+        corpo: '"' + verso.texto + '"',
         url: '#inicio',
       }),
     });
@@ -111,7 +111,7 @@ Deno.serve(async () => {
     });
     if (!response.ok) throw new Error('devocionais: a gravação respondeu ' + response.status + ' — ' + (await response.text()).slice(0, 300));
     const inserted: unknown[] = await response.json();
-    if (inserted.length > 0) await avisarDevocional(verso.referencia);
+    if (inserted.length > 0) await avisarDevocional(verso);
 
     return new Response(JSON.stringify({ data: chave, referencia: verso.referencia, criado: inserted.length > 0 }), {
       headers: { 'Content-Type': 'application/json' },

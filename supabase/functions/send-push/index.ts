@@ -1,8 +1,10 @@
 // ============================================================
-// Dispara notificação push para todos os aparelhos inscritos em push_tokens.
-// Chamada internamente por outras Edge Functions (sync-youtube quando o canal
-// fica ao vivo, auto-devocional quando publica o devocional do dia) — não é
-// pensada para ser chamada direto pelo site.
+// Dispara notificação push — para todos os aparelhos inscritos em push_tokens,
+// ou só para quem ativou logado com um perfil específico (campo "perfilId").
+// Chamada internamente por outras Edge Functions e por gatilhos do banco
+// (sync-youtube quando o canal fica ao vivo, auto-devocional quando publica o
+// devocional do dia, gatilhos de eventos e escalas) — não é pensada para ser
+// chamada direto pelo site.
 //
 // Usa a biblioteca "web-push" (compatibilidade NPM das Edge Functions) porque
 // criptografar a mensagem à mão (RFC 8291) é fácil de errar; a biblioteca já é
@@ -31,10 +33,15 @@ interface PushPayload {
   titulo: string;
   corpo: string;
   url?: string;
+  // Se vier preenchido, manda só para quem ativou notificação logado com esse perfil
+  // (ex.: aviso de escala). Sem isso, manda para todo mundo (culto ao vivo, devocional,
+  // evento novo) — quem ativa sem estar logado só recebe os avisos gerais.
+  perfilId?: string;
 }
 
-async function listTokens(): Promise<PushToken[]> {
-  const response = await fetch(SUPABASE_URL + '/rest/v1/push_tokens?select=id,endpoint,p256dh,auth', {
+async function listTokens(perfilId?: string): Promise<PushToken[]> {
+  const filtro = perfilId ? '&criado_por=eq.' + encodeURIComponent(perfilId) : '';
+  const response = await fetch(SUPABASE_URL + '/rest/v1/push_tokens?select=id,endpoint,p256dh,auth' + filtro, {
     headers: { apikey: SERVICE_ROLE_KEY, Authorization: 'Bearer ' + SERVICE_ROLE_KEY },
   });
   if (!response.ok) throw new Error('push_tokens: a leitura respondeu ' + response.status);
@@ -67,7 +74,7 @@ Deno.serve(async (req) => {
 
     webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
-    const tokens = await listTokens();
+    const tokens = await listTokens(payload.perfilId);
     const body = JSON.stringify({ title: payload.titulo, body: payload.corpo, url: payload.url || '.' });
 
     let enviados = 0;
