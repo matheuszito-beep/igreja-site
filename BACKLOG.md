@@ -66,13 +66,12 @@ Todos os itens usam o mesmo Supabase do site (nenhum dado novo fica só no app).
 
 **Status: parte 1 pronta (17/09/2026).** Tabela `devocionais` (data, referência e texto do versículo, reflexão, autor opcional, publicado) criada com RLS (só editor/admin escrevem; um por data). Painel novo em `/admin` (aba "Devocional") para cadastrar, editar e excluir — mesmo padrão visual de eventos e células. No site, um card "Devocional do dia" aparece na home (entre "Próximo culto" e "Cultos"): mostra o de hoje ou, se a equipe ainda não publicou o de hoje, o último publicado — e fica escondido sozinho se não houver nenhum ainda. Testado de ponta a ponta com uma conta de teste (RLS, cadastro, edição, exclusão, mensagem de data duplicada) e limpo depois.
 
-**Status do push: pronto (24/09/2026), falta só 1 passo manual.** Ver detalhes no item 4 abaixo — a mesma infraestrutura já avisa o devocional novo (criado sozinho pela `auto-devocional`) assim que ele é publicado.
+**Status do push: pronto, testado de ponta a ponta (25/09/2026).** Ver detalhes no item 4 abaixo — a mesma infraestrutura avisa o devocional novo (criado sozinho pela `auto-devocional`, com o versículo completo na notificação) assim que ele é publicado.
 
 ### 4. "Culto ao vivo" com notificação
 
-**Status: pronto (24/09/2026), falta só 1 passo manual.** Site virou instalável (PWA: `manifest.json` + `sw.js`, "Adicionar à tela de início"). Botão "Notificações" na barra de navegação (funciona sem login — o convite é pra comunidade inteira) salva o aparelho em `push_tokens`. A Edge Function `send-push` dispara os avisos; `sync-youtube` chama ela só na virada de "não ao vivo" para "ao vivo" (não a cada checagem de 10 min), e `auto-devocional` chama ela quando publica um devocional novo pela manhã.
-
-- **Falta só isto:** configurar a chave privada do VAPID nas secrets da Edge Function (Supabase → Project Settings → Edge Functions → Secrets → adicionar `VAPID_PRIVATE_KEY`). É a única credencial que as ferramentas de código não conseguem configurar sozinhas — precisa ser colada manualmente uma vez no painel do Supabase (o valor já foi gerado e está com o usuário). Até isso ser feito, o botão de ativar notificação funciona normalmente (salva o aparelho), mas o envio em si retorna erro silencioso nos logs da função.
+**Status: pronto, testado de ponta a ponta com entrega real no aparelho (25/09/2026).** Site virou instalável (PWA: `manifest.json` + `sw.js`, "Adicionar à tela de início" — no iPhone, só funciona notificação depois de instalado dessa forma, restrição da própria Apple). Botão "Notificações" na barra de navegação (funciona sem login — o convite é pra comunidade inteira) salva o aparelho em `push_tokens`. A Edge Function `send-push` dispara os avisos (pode mandar geral ou só pra uma pessoa, via `perfilId`); `sync-youtube` chama ela só na virada de "não ao vivo" para "ao vivo", `auto-devocional` quando publica um devocional novo, e um gatilho novo avisa geral quando um evento novo é publicado.
+- A chave privada do VAPID já foi colada nas secrets da Edge Function pelo usuário — funcionando de ponta a ponta.
 
 ### 5. Escalas de voluntários
 
@@ -84,7 +83,7 @@ Todos os itens usam o mesmo Supabase do site (nenhum dado novo fica só no app).
 
 **Atualização (17/09/2026): calendário visual da equipe.** Abaixo do formulário de escalar, tem um mini-calendário do mês (igual em espírito ao da agenda pública) mostrando, em cada dia, as iniciais de quem está escalado — cinza (aguardando resposta), verde (confirmado) ou vermelho (não vai) — com o nome completo e a função aparecendo ao passar o mouse. Tocar num dia já preenche "Outra data" com aquele dia, pra você marcar rapidinho quem vai. Tem setas pra ver os meses seguintes/anteriores.
 
-- **Falta (por decisão explícita do usuário, 17/09/2026):** notificação automática pra escalas. Por enquanto o "aviso" é só visual — destaque "é hoje!"/"é amanhã!" no painel e em Minha Conta — e quando alguém marca "não vou conseguir" isso aparece em destaque pro líder na próxima vez que abrir o painel, sem WhatsApp/push automático (exigiria guardar o telefone de cada pessoa, que ainda não existe no sistema). A infraestrutura de push já existe agora (item 4 acima, `send-push`) — só falta decidir a regra de quando avisar e ligar nela.
+- **Status do aviso automático: pronto (25/09/2026).** Três gatilhos: avisa a pessoa quando é escalada; avisa o(s) líder(es) do ministério quando alguém marca "não vou conseguir"; e lembra na véspera (18h) quem está confirmado pra escala do dia seguinte (`lembrete-escalas`, cron diário). Só funciona pra quem tem conta E ativou notificação logado (sem isso, não tem pra onde mandar — quem não tem conta continua dependendo do destaque visual no painel). Testado de ponta a ponta: aviso de "você foi escalado" confirmado chegando de verdade no aparelho. O aviso ao líder não foi testado com entrega real nesta sessão (a ferramenta de SQL não deixa simular login de outra pessoa, por segurança) — a lógica é a mesma já comprovada nos outros três gatilhos (evento, escalado, culto ao vivo, devocional), só falta um teste real feito pela pessoa que realmente lidera um ministério.
 
 - **Decisão explícita do usuário (18/09/2026): sem autoatendimento pra entrar em ministério por enquanto.** Cheguei a sugerir deixar a pessoa "pedir pra entrar" num ministério pela própria conta (com o líder aprovando), mas o usuário preferiu manter como está — só líder ou editor/admin adicionam gente à escala. Revisar essa decisão se o usuário pedir mais pra frente.
 
@@ -102,6 +101,6 @@ Todos os itens usam o mesmo Supabase do site (nenhum dado novo fica só no app).
 2. ~~Sua célula~~ — pronto · ~~Devocional~~ — pronto (push incluso) · ~~Culto ao vivo + push~~ — pronto (falta só colar a chave privada VAPID no Supabase, ver item 4)
 3. ~~Mural de oração~~ — pronto
 4. ~~Confirmação de presença~~ — pronto (sem pagamento; a parte paga fica parada)
-5. ~~Escalas de voluntários~~ — pronto (aviso automático ainda não ligado, mas a infraestrutura de push já existe)
+5. ~~Escalas de voluntários~~ — pronto, aviso automático incluso
 
-**Restam no roteiro:** colar a chave privada do VAPID no Supabase (1 passo manual, ver item 4), e decidir se/quando ligar o aviso automático das escalas na mesma infraestrutura. Pagamento de eventos pagos fica parado até o usuário pedir.
+**Restam no roteiro:** nada pendente na área do membro. Pagamento de eventos pagos fica parado até o usuário pedir.

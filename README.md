@@ -43,7 +43,7 @@ igreja-site/
 ├── BACKLOG.md              Atualizações futuras e pendências (não precisa subir)
 ├── supabase/
 │   ├── migrations/         Estrutura e permissões do banco (não precisa subir)
-│   └── functions/          Edge Functions: sync-youtube, auto-devocional e send-push (não precisa subir)
+│   └── functions/          Edge Functions: sync-youtube, auto-devocional, send-push, lembrete-escalas (não precisa subir)
 ├── tests/                  Testes automáticos (não precisa subir)
 └── tools/serve.mjs         Servidor local (não precisa subir)
 ```
@@ -106,9 +106,14 @@ igreja-site/
 
 ### Notificação push
 
-- O botão **Notificações**, na barra de navegação, funciona sem precisar de login — qualquer visitante pode ativar. O aparelho fica salvo na tabela `push_tokens`.
-- A Edge Function `send-push` dispara os avisos. Quem chama ela: `sync-youtube`, só na virada de "não ao vivo" para "ao vivo" (não a cada checagem de 10 min); e `auto-devocional`, quando publica um devocional novo pela manhã.
-- **Passo manual único:** a chave privada do VAPID precisa ser colada em Supabase → **Project Settings → Edge Functions → Secrets**, com o nome `VAPID_PRIVATE_KEY`. É a única credencial que não dá pra configurar por código — até isso ser feito, o botão de ativar funciona normalmente, só o envio em si fica pendente.
+- O botão **Notificações**, na barra de navegação, funciona sem precisar de login — qualquer visitante pode ativar. O aparelho fica salvo na tabela `push_tokens`. No iPhone, só funciona depois de "Adicionar à Tela de Início" e abrir por esse ícone (restrição da Apple, não dá pra notificar direto pelo Safari).
+- A Edge Function `send-push` dispara os avisos — geral (todo mundo) ou só pra uma pessoa (`perfilId`, usado nos avisos de escala; só chega em quem tem conta e ativou notificação logado). Quem chama ela:
+  - `sync-youtube`, só na virada de "não ao vivo" para "ao vivo";
+  - `auto-devocional`, quando publica um devocional novo pela manhã;
+  - um gatilho no banco (`eventos`), quando um evento novo (não culto recorrente) é publicado;
+  - dois gatilhos no banco (`escalas`): avisa a pessoa quando é escalada, e avisa o(s) líder(es) quando alguém marca "não vou conseguir";
+  - `lembrete-escalas` (cron diário, 18h Brasília): lembra na véspera quem está confirmado pra escala do dia seguinte.
+- A chave privada do VAPID já está configurada nas secrets da Edge Function (Supabase → Project Settings → Edge Functions → Secrets → `VAPID_PRIVATE_KEY`). Se o projeto for movido pra outra conta/organização do Supabase, essa secret precisa ser recriada lá — é a única credencial que não vem pelo código.
 
 ### Antes de colocar o site no ar
 
