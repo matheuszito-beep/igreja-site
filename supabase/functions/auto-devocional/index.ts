@@ -74,7 +74,7 @@ async function avisarDevocional(verso: Verso): Promise<void> {
       body: JSON.stringify({
         titulo: 'Devocional de hoje: ' + verso.referencia,
         corpo: '"' + verso.texto + '"',
-        url: '#inicio',
+        url: '#devocional',
       }),
     });
   } catch (error) {

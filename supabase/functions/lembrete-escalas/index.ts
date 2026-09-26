@@ -49,7 +49,7 @@ Deno.serve(async () => {
         body: JSON.stringify({
           titulo: 'Você está escalado amanhã',
           corpo: (escala.ministerios?.nome || 'Ministério') + (escala.funcao ? ' · ' + escala.funcao : ''),
-          url: 'conta.html',
+          url: 'conta.html#escala',
           perfilId,
         }),
       });
