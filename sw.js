@@ -39,9 +39,14 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const url = new URL(event.notification.data && event.notification.data.url || '.', self.registration.scope).href;
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (clients) => {
       const open = clients.find((client) => client.url.startsWith(self.registration.scope));
-      if (open) return open.focus();
+      // Achar a janela aberta não basta: sem navigate() ela só vem pra frente
+      // parada na página em que já estava, ignorando o link da notificação.
+      if (open && 'navigate' in open) {
+        await open.navigate(url);
+        return open.focus();
+      }
       return self.clients.openWindow(url);
     }),
   );
