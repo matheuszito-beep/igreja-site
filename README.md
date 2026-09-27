@@ -43,7 +43,7 @@ igreja-site/
 ├── BACKLOG.md              Atualizações futuras e pendências (não precisa subir)
 ├── supabase/
 │   ├── migrations/         Estrutura e permissões do banco (não precisa subir)
-│   └── functions/          Edge Functions: sync-youtube, auto-devocional, send-push, lembrete-escalas (não precisa subir)
+│   └── functions/          Edge Functions: sync-youtube, auto-devocional, send-push, lembrete-escalas, lembrete-agenda (não precisa subir)
 ├── tests/                  Testes automáticos (não precisa subir)
 └── tools/serve.mjs         Servidor local (não precisa subir)
 ```
@@ -112,7 +112,8 @@ igreja-site/
   - `auto-devocional`, quando publica um devocional novo pela manhã;
   - um gatilho no banco (`eventos`), quando um evento novo (não culto recorrente) é publicado;
   - dois gatilhos no banco (`escalas`): avisa a pessoa quando é escalada, e avisa o(s) líder(es) quando alguém marca "não vou conseguir";
-  - `lembrete-escalas` (cron diário, 18h Brasília): lembra na véspera quem está confirmado pra escala do dia seguinte.
+  - `lembrete-escalas` (cron diário, 18h Brasília): lembra na véspera quem está confirmado pra escala do dia seguinte;
+  - `lembrete-agenda` (cron a cada 15 min): lembra geral de cultos e eventos de hoje — de manhã (08h–08h15) e perto da hora de começar (45–75 min antes). Cultos são recorrentes (semanal/quinzenal/mensal) e não têm uma linha por ocorrência no banco, então a função recalcula "isso acontece hoje?" em Deno com a mesma regra do site (`assets/js/calendar-utils.js`) — mantenha as duas em sincronia se a regra de recorrência mudar. A tabela `avisos_agenda_enviados` evita avisar duas vezes a mesma ocorrência no mesmo dia.
 - A chave privada do VAPID já está configurada nas secrets da Edge Function (Supabase → Project Settings → Edge Functions → Secrets → `VAPID_PRIVATE_KEY`). Se o projeto for movido pra outra conta/organização do Supabase, essa secret precisa ser recriada lá — é a única credencial que não vem pelo código.
 
 ### Antes de colocar o site no ar
